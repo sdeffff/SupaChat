@@ -23,8 +23,7 @@ export class AuthenticationService {
 
     //And if the page will be refreshed, the user will still be logged in
     onAuthStateChanged(auth, (user) => {
-        if(user) this.currentUser.next(user);
-        else this.currentUser.next(null);
+      user ? this.currentUser.next(user) : this.currentUser.next(null);  
     })
   };
 

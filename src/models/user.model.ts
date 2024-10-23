@@ -1,5 +1,7 @@
+type stringOrNull = string | null;
+
 export interface UserModel {
-    email: string;
-    pwd: string;
-    confirmPwd: string;
+    email: stringOrNull;
+    pwd: stringOrNull;
+    confirmPwd: stringOrNull;
 }

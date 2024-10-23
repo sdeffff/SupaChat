@@ -1,58 +1,90 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
-import { userInfo } from 'os';
 import { Router, RouterOutlet } from '@angular/router';
+//Imports for the form:
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
+//Models:
 import { UserModel } from '../../../models/user.model';
+import { GoogleUser } from '../../../models/google_user.model';
+import { response } from 'express';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, NgIf],
+  imports: [RouterOutlet, FormsModule, NgIf],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   providers: [AuthenticationService]
 })
 export class LoginComponent {
-  public uid: string = "";
-
   //Users data:
-  _user: UserModel = {
+  private _user: UserModel = {
     email: "",
     pwd: "",
     confirmPwd: ""
+  }
+
+  private _googleUser: GoogleUser = {
+    email: "",
+    name: "",
+    pfp: "",
   }
 
   get user(): UserModel {
     return this._user;
   }
 
-  constructor(private authService: AuthenticationService) {}
+  get googleUser(): GoogleUser {
+    return this._googleUser;
+  }
+
+  constructor(private authService: AuthenticationService, private router: Router) {}
 
   ngOnInit() {
-    console.log(this.authService.currentUser);
+    this.authService.currentUser.subscribe((user) => {
+      if (user) {
+        this._googleUser = {
+          email: user.email,
+          name: user.displayName,
+          pfp: user.photoURL,
+        }
+      }
+    });
   }
 
   logInGoogle() {
-    this.authService.logInGoogle().subscribe(
-      (userInfo) => {
-        if(userInfo && !this.authService.currentUser.hasError) {
-          //navigate to chatroom
-          //...
-          this.uid = userInfo.user.uid;
-        }
+    this.authService.logInGoogle().subscribe({
+      next: (res) => {
+        this.router.navigate(["/chatroom"]);
+      },
+      error: (err) => {
+        console.error(err);
       }
-    )
+    });
+
+    this.authService.currentUser.subscribe((user) => {
+      this._googleUser = {
+        email: user!.email,
+        name: user!.displayName,
+        pfp: user!.photoURL,
+      }
+    });
   }
 
   logOut() {
-    this.uid = "";
+    this._googleUser = {
+      email: "",
+      name: "",
+      pfp: "",
+    }
 
     this.authService.logOut().subscribe();
 
-    //navigate to login page
-    //...
-    console.log(this.authService.currentUser, this.uid);
+    this.router.navigate(["/login"]);
+  }
+
+  showData() {
+    console.log(this._googleUser);
   }
 }

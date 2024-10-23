@@ -5,7 +5,7 @@
         <input type="email" placeholder="Enter your email" required
         name="email"
         #email="ngModel"
-        [(ngModel)]="_user.email">
+        [(ngModel)]="user.email">
         <div [hidden]="email.untouched" class="error">Email is required</div>
 
         <input type="password" placeholder="Your password" required
@@ -13,7 +13,7 @@
         minlength="8"
         name="pwd"
         #pwd="ngModel"
-        [(ngModel)]="_user.pwd">
+        [(ngModel)]="user.pwd">
         <div [hidden]="pwd.untouched || pwd.valid" class="error">Password is required</div>
         <div *ngIf="pwd.hasError('minlength')" class="error">Password must be 8 characters</div>
 
@@ -22,7 +22,7 @@
         minlength="8"
         name="confirmPwd"
         #confirmPwd="ngModel"
-        [(ngModel)]="_user.confirmPwd">
+        [(ngModel)]="user.confirmPwd">
         <div [hidden]="confirmPwd.value === pwd.value" class="error">Passwords are not matching!</div>
     </div>
 
@@ -35,5 +35,5 @@
         Log In with Google
     </button>
 
-    <button (click)="logOut()" [hidden]="">logout</button>
+    <button (click)="logOut()" [hidden]="this.googleUser.email!.length === 0">logout</button>
   </form>
