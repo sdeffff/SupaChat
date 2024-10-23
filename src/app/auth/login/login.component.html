@@ -1,0 +1,39 @@
+ <form (submit)="$event.preventDefault()" novalidate>
+    <h1>Log In</h1>
+
+    <div>
+        <input type="email" placeholder="Enter your email" required
+        name="email"
+        #email="ngModel"
+        [(ngModel)]="_user.email">
+        <div [hidden]="email.untouched" class="error">Email is required</div>
+
+        <input type="password" placeholder="Your password" required
+        maxlength="18"
+        minlength="8"
+        name="pwd"
+        #pwd="ngModel"
+        [(ngModel)]="_user.pwd">
+        <div [hidden]="pwd.untouched || pwd.valid" class="error">Password is required</div>
+        <div *ngIf="pwd.hasError('minlength')" class="error">Password must be 8 characters</div>
+
+        <input type="password" placeholder="Repeat password" required
+        maxlength="18"
+        minlength="8"
+        name="confirmPwd"
+        #confirmPwd="ngModel"
+        [(ngModel)]="_user.confirmPwd">
+        <div [hidden]="confirmPwd.value === pwd.value" class="error">Passwords are not matching!</div>
+    </div>
+
+    <button>Log In</button>
+
+    <p>Or</p>
+
+    <button (click)="logInGoogle(); $event.preventDefault()">
+        <img src="../../../assets/imgs/google.svg" alt="Google">
+        Log In with Google
+    </button>
+
+    <button (click)="logOut()" [hidden]="">logout</button>
+  </form>

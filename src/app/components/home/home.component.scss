@@ -1,0 +1,102 @@
+body {
+    padding: 1.25rem;
+    color: #f5f5f5;
+}
+
+.main-header {
+    background-color: #272438;
+    border-radius: 1.25rem;
+
+    padding: 1.75rem;
+
+    h1 {
+        text-transform: uppercase;
+        font-weight: 300;
+
+        span {
+            font-weight: 500;
+        }
+    }
+}
+
+section {
+    display: flex;
+    margin-top: 1.25rem;
+
+    main {
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+
+            li {
+                display: flex;
+                gap: 1.5rem;
+
+                article {
+                    background-color: #272438;
+
+                    border-radius: 1.25rem;
+                }
+
+                div {
+                    background-color: #8270E2;
+
+                    border-radius: 1.25rem;
+                }
+
+                &.top-section {
+                    article {
+                        width: 40rem;
+                        height: 20rem;
+                    }
+
+                    div {
+                        width: 20rem;
+                        height: 20rem;
+                    }
+                }
+
+                &.bottom-section {
+                    article {
+                        width: 30rem;
+                        height: 14rem;
+                    }
+
+                    div {
+                        padding: 1.75rem 1.5rem;
+
+                        width: 30rem;
+                        height: 14rem;
+
+                        a {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+
+                            color: white;
+
+                            height: 100%;
+
+                            header {
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+
+                                img {
+                                    width: 1.25rem;
+                                }
+                            }
+
+                            h1 {
+                                font-size: 2rem;
+                                font-weight: 400;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
