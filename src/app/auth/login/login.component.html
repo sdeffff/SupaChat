@@ -2,11 +2,19 @@
     <h1>Log In</h1>
 
     <div>
+        <input type="text" placeholder="Enter your name" required
+        name="name"
+        minlength="3"
+        maxlength="20"
+        #name="ngModel"
+        [(ngModel)]="user.name">
+        <div [hidden]="name.untouched || name.valid" class="error">Name is required</div>
+
         <input type="email" placeholder="Enter your email" required
         name="email"
         #email="ngModel"
         [(ngModel)]="user.email">
-        <div [hidden]="email.untouched" class="error">Email is required</div>
+        <div [hidden]="email.untouched || email.valid" class="error">Email is required</div>
 
         <input type="password" placeholder="Your password" required
         maxlength="18"
@@ -26,14 +34,12 @@
         <div [hidden]="confirmPwd.value === pwd.value" class="error">Passwords are not matching!</div>
     </div>
 
-    <button>Log In</button>
+    <button (click)="logInEmailPassword()" [disabled]="name.invalid || name.value == '' || email.invalid || pwd.invalid || email.value == '' || pwd.value == '' || pwd.value !== confirmPwd.value">Log In</button>
 
     <p>Or</p>
 
     <button (click)="logInGoogle(); $event.preventDefault()">
-        <img src="../../../assets/imgs/google.svg" alt="Google">
+        <img src="../../../assets/imgs/login-page/google.svg" alt="Google">
         Log In with Google
     </button>
-
-    <button (click)="logOut()" [hidden]="this.googleUser.email!.length === 0">logout</button>
   </form>

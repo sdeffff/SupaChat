@@ -15,15 +15,70 @@ section {
 
         padding: 1rem 1.5rem;
 
+        .search-tab {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+
+            img {
+                width: 1rem;
+            }
+
+            input {
+                outline: none;
+                border: none;
+                background: none;
+                border-bottom: 1px solid #6d6d6d;
+
+                color: #f5f5f5;
+
+                padding-block: .25rem;
+                
+                font-size: 1rem;
+
+                transition: .2s ease;
+
+                &:is(:focus) {
+                    border-bottom: 1px solid #f5f5f5;
+                }
+            }
+        }
+
         .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+
+            padding-block: .75rem;
+
+            background-color: #403a6500;
+            border-radius: 1rem;
+
+            transition: .25s ease;
+            cursor: pointer;
+
+            &:is(:hover, :focus) {
+                background-color: #403a656f;
+            }
+
             h1 {
-                font-size: 1.75rem;
+                display: flex;
+                align-items: center;
+                text-align: center;
+
+                font-size: 1.5rem;
                 font-weight: 400;
+
+                p {
+                    font-size: 1.25rem;
+                }
             }
 
             img {
-                width: 10px;
-                height: 10px;
+                border-radius: 1rem;
+
+                max-width: 2rem;
             }
         }
 
@@ -42,19 +97,137 @@ section {
         flex-direction: column;
         justify-content: space-between;
 
+        padding-bottom: 3.75rem;
+
         width: 100%;
 
         header {
             display: flex;
             justify-content: end;
 
-            padding: 1rem 2rem;
+            padding: 1.25rem 2rem;
 
             background-color: #272438;
 
             h2 {
                 font-size: 1.75rem;
                 font-weight: 400;
+            }
+        }
+
+        .input-wrapper {
+            padding-inline: 2rem;
+
+            div {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                padding: .75rem 1.5rem;
+
+                border-radius: .75rem;
+                background-color: #272438;
+
+                input {
+                    width: 100%;
+                    padding-right: 1rem;
+                    padding-block: 0.25rem;
+
+                    background: none;
+                    outline: none;
+                    border: none;
+
+                    font-size: 1.05rem;
+
+                    color: #f5f5f5;
+                }
+
+                button {
+                    display: flex;
+                    align-items: center;
+
+                    background: none;
+
+                    img {
+                        width: 1.5rem;
+                    }
+                }
+            }
+        }
+    }
+
+    .modal {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+
+        height: 100vmin;
+        width: 100vw;
+
+        background-color: #00000050;
+
+        transition: .25s ease;
+
+        pointer-events: all;
+
+        .modal-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            background-color: #1e1e2d;
+
+            border: 2px solid #272438;
+            border-radius: 1rem;
+
+            overflow: hidden;
+
+            header {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+
+                background-color: #272438;
+
+                padding: 1rem 2rem;
+
+                img {
+                    max-width: 4rem;
+                    border-radius: 50%;
+                }
+
+                div {
+                    h2 {
+                        font-weight: 400;
+                    }
+                }
+            }
+
+            button {
+                margin-block: 2rem;
+
+                padding: 0.75rem 3rem;
+                
+                font-size: 1.25rem;
+                color: #f5f5f5;
+
+                background: none;
+                border: 1px solid #f5f5f5;
+                border-radius: .75rem;
+
+                transition: .25s ease;
+
+                &:is(:hover, :focus) {
+                    background-color: #eb2f06;
+                    border-color: #eb2f06;
+                }
             }
         }
     }

@@ -1,11 +1,31 @@
 <section>
+    <div class="modal" [style]="modalOpacity">
+        <div class="modal-inner">
+            <header>
+                <img [src]="profileSrc" alt="">
+
+                <div>
+                    <h2 [innerText]="name"></h2>
+                    <h2 [innerText]="email"></h2>
+                </div>
+
+                <p (click)="closeModal()">exit</p>
+            </header>
+
+            <button (click)="logOut()">Log Out</button>
+        </div>
+    </div>
+
     <aside class="recent-chats">
-        <div class="user-info">
-            <h1 [innerText]="greeting"></h1>
+        <div class="user-info" (click)="showModal()">
             <img [src]="profileSrc" alt="">
+            <h1 [innerHTML]="shortName"></h1>
         </div>
 
-        <input type="text" placeholder="Search">
+        <div class="search-tab">
+            <img src="../../../../assets/imgs/chat-icons/search-icon.svg" alt="">
+            <input type="text" placeholder="Search">
+        </div>
 
         <ul>
             <li>asd</li>
@@ -24,10 +44,12 @@
 
         </div>
 
-        <div>
-            <input type="text" placeholder="Write something">
+        <div class="input-wrapper">
+            <div>
+                <input type="text" placeholder="Write something">
 
-            <button></button>
+                <button><img src="../../../../assets/imgs/chat-icons/send-msg.svg" alt=""></button>
+            </div>
         </div>
     </main>
 </section>

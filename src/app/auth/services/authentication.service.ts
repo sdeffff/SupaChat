@@ -3,17 +3,17 @@ import { app, auth } from '../../../environments/environment.dev';
 import { 
     GoogleAuthProvider, GithubAuthProvider, 
     onAuthStateChanged, signInWithPopup, 
-    signOut, User, createUserWithEmailAndPassword } from 'firebase/auth';
+    signOut, User, createUserWithEmailAndPassword, 
+    updateProfile} from 'firebase/auth';
 
 import { BehaviorSubject, from, Observable } from 'rxjs';
+import { UserModel } from '../../../models/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private googleProvider = new GoogleAuthProvider()
-          gitHubProvider = new GithubAuthProvider();
-
+  private googleProvider = new GoogleAuthProvider();
 
   public currentUser = new BehaviorSubject<User | null>(null);
 
@@ -31,10 +31,17 @@ export class AuthenticationService {
     return from(signInWithPopup(auth, this.googleProvider));
   }
 
-  logInEmailPassword(email: string, password: string): Observable<any> {
+  logInEmailPassword(email: string, password: string, name: string): Observable<any> {
     return from(createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                this.currentUser.next(userCredential.user);
+              //Changes the user's display name
+              const user = userCredential.user;
+              
+              return updateProfile(user, {displayName: name}).then(() => {
+                this.currentUser.next(user);
+
+                return user;
+              });
             }));
   }
 

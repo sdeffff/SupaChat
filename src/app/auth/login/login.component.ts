@@ -20,6 +20,7 @@ import { response } from 'express';
 export class LoginComponent {
   //Users data:
   private _user: UserModel = {
+    name: "",
     email: "",
     pwd: "",
     confirmPwd: ""
@@ -42,13 +43,10 @@ export class LoginComponent {
   constructor(private authService: AuthenticationService, private router: Router) {}
 
   ngOnInit() {
+    //Checking if the user exists, if so, redirect to the chatroom
     this.authService.currentUser.subscribe((user) => {
       if (user) {
-        this._googleUser = {
-          email: user.email,
-          name: user.displayName,
-          pfp: user.photoURL,
-        }
+        this.router.navigate(["/chatroom"]);
       }
     });
   }
@@ -68,6 +66,17 @@ export class LoginComponent {
         email: user!.email,
         name: user!.displayName,
         pfp: user!.photoURL,
+      }
+    });
+  }
+
+  logInEmailPassword() {
+    this.authService.logInEmailPassword(this._user.email, this._user.pwd, this._user.name).subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+      error: (err) => {
+        console.error(err);
       }
     });
   }
