@@ -6,8 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 //Models:
 import { UserModel } from '../../../models/user.model';
-import { GoogleUser } from '../../../models/google_user.model';
-import { response } from 'express';
+import { GoogleUser } from '../../../models/login.model';
 
 @Component({
   selector: 'app-login',
@@ -26,18 +25,8 @@ export class LoginComponent {
     confirmPwd: ""
   }
 
-  private _googleUser: GoogleUser = {
-    email: "",
-    name: "",
-    pfp: "",
-  }
-
   get user(): UserModel {
     return this._user;
-  }
-
-  get googleUser(): GoogleUser {
-    return this._googleUser;
   }
 
   constructor(private authService: AuthenticationService, private router: Router) {}
@@ -60,40 +49,44 @@ export class LoginComponent {
         console.error(err);
       }
     });
-
-    this.authService.currentUser.subscribe((user) => {
-      this._googleUser = {
-        email: user!.email,
-        name: user!.displayName,
-        pfp: user!.photoURL,
-      }
-    });
   }
 
-  logInEmailPassword() {
-    this.authService.logInEmailPassword(this._user.email, this._user.pwd, this._user.name).subscribe({
+  createNewUser() {
+    this.authService.registerEmailPassword(this._user.email, this._user.pwd, this._user.name).subscribe({
       next: (res) => {
+        console.clear();
         console.log(res);
       },
       error: (err) => {
-        console.error(err);
+        if(err.message.includes("auth/email-already-in-use")) {
+          alert("This email is already in use");
+
+          this._user.email = "";
+          this._user.pwd = "";
+          this._user.confirmPwd = "";
+
+          console.clear();
+        }
       }
     });
   }
 
-  logOut() {
-    this._googleUser = {
-      email: "",
-      name: "",
-      pfp: "",
-    }
+  logInUser() {
+    this.authService.logInEmailPassword(this._user.email, this._user.pwd, this._user.name).subscribe({
+      next: (res) => {
+        console.clear();
+        console.log(res);
+      },
+      error: (err) => {
+        if(err.message.includes("auth/invalid-credential")) {
+          alert("Invalid password for email");
 
-    this.authService.logOut().subscribe();
+          this._user.pwd = "";
+          this._user.confirmPwd = "";
 
-    this.router.navigate(["/login"]);
-  }
-
-  showData() {
-    console.log(this._googleUser);
+          console.clear();
+        }
+      }
+    });
   }
 }

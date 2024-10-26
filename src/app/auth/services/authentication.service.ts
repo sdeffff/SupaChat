@@ -3,7 +3,7 @@ import { app, auth } from '../../../environments/environment.dev';
 import { 
     GoogleAuthProvider, GithubAuthProvider, 
     onAuthStateChanged, signInWithPopup, 
-    signOut, User, createUserWithEmailAndPassword, 
+    signOut, User, createUserWithEmailAndPassword, signInWithEmailAndPassword,
     updateProfile} from 'firebase/auth';
 
 import { BehaviorSubject, from, Observable } from 'rxjs';
@@ -31,7 +31,7 @@ export class AuthenticationService {
     return from(signInWithPopup(auth, this.googleProvider));
   }
 
-  logInEmailPassword(email: string, password: string, name: string): Observable<any> {
+  registerEmailPassword(email: string, password: string, name: string): Observable<any> {
     return from(createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
               //Changes the user's display name
@@ -42,6 +42,17 @@ export class AuthenticationService {
 
                 return user;
               });
+            }));
+  }
+
+  logInEmailPassword(email: string, password: string, name: string): Observable<any> {
+    return from(signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              const user = userCredential.user;
+
+              this.currentUser.next(user);
+
+              return user;
             }));
   }
 

@@ -23,11 +23,6 @@ export class ChatroomComponent {
   constructor(private authService: AuthenticationService, private router: Router) {}
 
   ngOnInit() {
-    if (sessionStorage.getItem("reloaded") !== "true") {
-      sessionStorage.setItem("reloaded", "true");
-      location.reload();
-    }
-
     this.authService.currentUser.subscribe((user) => {
         if (user) {
             console.log(user);
@@ -37,6 +32,8 @@ export class ChatroomComponent {
               //For modal:
               this.name = user.displayName;
               this.email = user.email;
+        } else {
+          this.router.navigate(["/"]);
         }
     });
   }
