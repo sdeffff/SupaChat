@@ -9,22 +9,57 @@
                     <h2 [innerText]="email"></h2>
                 </div>
 
-                <p (click)="closeModal()">exit</p>
+                <div class="close" (click)="closeModal()">
+                    
+                </div>
             </header>
 
-            <button (click)="logOut()">Log Out</button>
+            <div class="modal-btns">
+                <button (click)="logOut()">Log Out</button>
+
+                <button>Change Name</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal add-friend-modal" [style]="addFriendModalOpacity">
+        <div class="modal-inner">
+            <header>
+                <h2>Add Friend</h2>
+
+                <div class="close" (click)="closeModal()">
+                    
+                </div>
+            </header>
+
+            <form class="add-friend-modal-body">
+                <input type="text" placeholder="Enter friend's name"
+                name="friendName"
+                [(ngModel)]="friendName"
+                (ngModelChange)="searchFriend(friendName)">
+
+                <button>Add</button>
+            </form>
+
+            <ul class="friend-list">
+                <li *ngFor="let friend of searchResults">{{ friend.name }}</li>
+            </ul>
         </div>
     </div>
 
     <aside class="recent-chats">
-        <div class="user-info" (click)="showModal()">
+        <div class="user-info" (click)="showModal('profile')">
             <img [src]="profileSrc" alt="">
             <h1 [innerHTML]="shortName"></h1>
         </div>
 
-        <div class="search-tab">
-            <img src="../../../../assets/imgs/chat-icons/search-icon.svg" alt="">
-            <input type="text" placeholder="Search">
+        <div class="aside-header">
+            <div class="search-tab">
+                <img src="../../../../assets/imgs/chat-icons/search-icon.svg" alt="">
+                <input type="text" placeholder="Search">
+            </div>
+
+            <button (click)="showModal('friends')">add friend by name</button>
         </div>
 
         <ul>
@@ -35,9 +70,9 @@
         </ul>
     </aside>
 
-    <main class="chat">
+    <main>
         <header>
-            <h2>SupaChat</h2>
+            <a href=""><h2>SupaChat</h2></a>
         </header>
 
         <div class="main-chat">
