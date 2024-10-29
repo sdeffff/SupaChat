@@ -1,58 +1,71 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
-import { userInfo } from 'os';
 import { Router, RouterOutlet } from '@angular/router';
+//Imports for the form:
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { UserModel } from '../../../models/user.model';
+//Models:
+import { LogInModel } from '../../../models/login.model';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, NgIf],
+  imports: [RouterOutlet, FormsModule, NgIf],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   providers: [AuthenticationService]
 })
 export class LoginComponent {
-  public uid: string = "";
-
   //Users data:
-  _user: UserModel = {
+  private _user: LogInModel = {
     email: "",
     pwd: "",
-    confirmPwd: ""
   }
 
-  get user(): UserModel {
+  get user(): LogInModel {
     return this._user;
   }
 
-  constructor(private authService: AuthenticationService) {}
+  constructor(private authService: AuthenticationService, private router: Router) {}
 
   ngOnInit() {
-    console.log(this.authService.currentUser);
+    //Checking if the user exists, if so, redirect to the chatroom
+    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    if(user && user.emailVerified) {
+      this.router.navigate(["/chatroom"]);
+    } else {
+      console.log("asd");
+    }
   }
 
   logInGoogle() {
-    this.authService.logInGoogle().subscribe(
-      (userInfo) => {
-        if(userInfo && !this.authService.currentUser.hasError) {
-          //navigate to chatroom
-          //...
-          this.uid = userInfo.user.uid;
-        }
+    this.authService.logInGoogle().subscribe({
+      next: (res) => {
+        this.router.navigate(["/chatroom"]);
+      },
+      error: (err) => {
+        console.log(err);
       }
-    )
+    });
   }
 
-  logOut() {
-    this.uid = "";
+  logInUser() {
+    this.authService.logInEmailPassword(this._user.email, this._user.pwd).subscribe({
+      next: (res) => {
+        console.log(res);
 
-    this.authService.logOut().subscribe();
+        if(!res.emailVerified) {
+          alert("Please verify your email address");
+        }
+      },
+      error: (err) => {
+        if(err.message.includes("auth/invalid-credential")) {
+          alert("Invalid password for email");
 
-    //navigate to login page
-    //...
-    console.log(this.authService.currentUser, this.uid);
+          this._user.pwd = "";
+        }
+      }
+    });
   }
 }

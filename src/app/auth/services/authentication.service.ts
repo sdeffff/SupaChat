@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
-import { app, auth } from '../../../environments/environment.dev';
+import { auth, db } from '../../../environments/environment.dev';
 import { 
-    GoogleAuthProvider, GithubAuthProvider, 
+    GoogleAuthProvider, 
     onAuthStateChanged, signInWithPopup, 
-    signOut, User, createUserWithEmailAndPassword } from 'firebase/auth';
+    signOut, User, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+    updateProfile, sendEmailVerification, deleteUser } from 'firebase/auth';
+
+import { doc, setDoc } from 'firebase/firestore';
 
 import { BehaviorSubject, from, Observable } from 'rxjs';
 
@@ -11,9 +14,7 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private googleProvider = new GoogleAuthProvider()
-          gitHubProvider = new GithubAuthProvider();
-
+  private googleProvider = new GoogleAuthProvider();
 
   public currentUser = new BehaviorSubject<User | null>(null);
 
@@ -23,8 +24,17 @@ export class AuthenticationService {
 
     //And if the page will be refreshed, the user will still be logged in
     onAuthStateChanged(auth, (user) => {
-        if(user) this.currentUser.next(user);
-        else this.currentUser.next(null);
+      if (user && user.emailVerified) {
+        this.currentUser.next(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        
+        if(location.pathname === "/auth/login" || location.pathname === "/auth/register") {
+          location.pathname = "/chatroom";
+        }
+      } else {
+        this.currentUser.next(null);
+        localStorage.removeItem('currentUser');
+      }
     })
   };
 
@@ -32,15 +42,49 @@ export class AuthenticationService {
     return from(signInWithPopup(auth, this.googleProvider));
   }
 
-  logInEmailPassword(email: string, password: string): Observable<any> {
+  registerEmailPassword(email: string, password: string, name: string): Observable<any> {
     return from(createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                this.currentUser.next(userCredential.user);
+              //Send verification email
+              sendEmailVerification(userCredential.user)
+                .then(() => {
+                  alert(`Verification email sent to your email address ${name}`);
+                
+
+              //Changes the user's display name
+              const user = userCredential.user;
+
+              return updateProfile(user, {displayName: name}).then(() => {
+                this.currentUser.next(user);
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                setDoc(doc(db, "users", name), {
+                  name: name,
+                  email: email,
+                  uid: user.uid,
+                });
+
+                return user;
+              })
+            });
+            })
+          )}
+
+  logInEmailPassword(email: string, password: string): Observable<any> {
+    return from(signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              const user = userCredential.user;
+
+              this.currentUser.next(user);
+              localStorage.setItem('currentUser', JSON.stringify(user));
+
+              return user;
             }));
   }
 
   logOut(): Observable<any> {
     this.currentUser = new BehaviorSubject<User | null>(null);
+    localStorage.removeItem('currentUser');
 
     return from(signOut(auth));
   }

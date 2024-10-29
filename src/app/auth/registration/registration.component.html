@@ -1,0 +1,47 @@
+<form (submit)="$event.preventDefault()" novalidate>
+    <h1>Sign Up</h1>
+
+    <div>
+        <input type="text" placeholder="Enter your name" required
+        name="name"
+        minlength="3"
+        maxlength="20"
+        #name="ngModel"
+        [(ngModel)]="user.name">
+        <div [hidden]="name.untouched || name.valid" class="error">Name is required</div>
+
+        <input type="email" placeholder="Enter your email" required
+        name="email"
+        #email="ngModel"
+        [(ngModel)]="user.email">
+        <div [hidden]="email.untouched || email.valid" class="error">Email is required</div>
+
+        <input type="password" placeholder="Your password" required
+        maxlength="18"
+        minlength="8"
+        name="pwd"
+        #pwd="ngModel"
+        [(ngModel)]="user.pwd">
+        <div [hidden]="pwd.untouched || pwd.valid" class="error">Password is required</div>
+        <div *ngIf="pwd.hasError('minlength')" class="error">Password must be 8 characters</div>
+
+        <input type="password" placeholder="Repeat password" required
+        maxlength="18"
+        minlength="8"
+        name="confirmPwd"
+        #confirmPwd="ngModel"
+        [(ngModel)]="user.confirmPwd">
+        <div [hidden]="confirmPwd.value === pwd.value || confirmPwd.untouched" class="error">Passwords are not matching!</div>
+    </div>
+
+    <button (click)="registerUser()" [disabled]="name.invalid || name.value == '' || email.invalid || pwd.invalid || email.value == '' || pwd.value == '' || pwd.value !== confirmPwd.value">Sign Up</button>
+
+    <p>Or</p>
+
+    <button (click)="logInGoogle(); $event.preventDefault()">
+        <img src="../../../assets/imgs/login-page/google.svg" alt="Google">
+        Sign Up with Google
+    </button>
+
+    <a href="auth/login">Already have an account?</a>
+  </form>

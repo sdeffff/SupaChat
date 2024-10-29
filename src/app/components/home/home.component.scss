@@ -1,13 +1,22 @@
+$purple: #272438;
+$light-purple: #8270E2;
+$white: #f5f5f5;
+$dark-purple: #1F1D2B; 
+
 body {
     padding: 1.25rem;
-    color: #f5f5f5;
+    color: $white;
 }
 
 .main-header {
-    background-color: #272438;
+    background-color: $purple;
     border-radius: 1.25rem;
 
     padding: 1.75rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     h1 {
         text-transform: uppercase;
@@ -35,39 +44,37 @@ section {
                 gap: 1.5rem;
 
                 article {
-                    background-color: #272438;
+                    background-color: $purple;
 
                     border-radius: 1.25rem;
                 }
 
                 div {
-                    background-color: #8270E2;
+                    background-color: $light-purple;
 
                     border-radius: 1.25rem;
                 }
 
                 &.top-section {
                     article {
-                        width: 40rem;
+                        width: 42vw;
                         height: 20rem;
                     }
 
                     div {
-                        width: 20rem;
+                        width: 22vw;
                         height: 20rem;
                     }
                 }
 
                 &.bottom-section {
                     article {
-                        width: 30rem;
+                        width: 32vw;
                         height: 14rem;
                     }
 
                     div {
-                        padding: 1.75rem 1.5rem;
-
-                        width: 30rem;
+                        width: 32vw;
                         height: 14rem;
 
                         a {
@@ -75,9 +82,11 @@ section {
                             flex-direction: column;
                             justify-content: space-between;
 
-                            color: white;
+                            color: $white;
 
                             height: 100%;
+
+                            padding: 1.75rem 1.5rem;
 
                             header {
                                 display: flex;
