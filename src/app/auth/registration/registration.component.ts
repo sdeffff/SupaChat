@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+//For html:
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
-
+//Router:
 import { Router, RouterOutlet } from '@angular/router';
-
+//Service:
 import { AuthenticationService } from '../services/authentication.service';
-
+//Model:
 import { RegisterModel } from '../../../models/register.model';
 
 @Component({

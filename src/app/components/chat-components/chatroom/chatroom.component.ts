@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from '../../../auth/services/authentication.service';
 import { Router, RouterOutlet } from '@angular/router';
+import { Observable } from 'rxjs';
 
-//Firestore:
+//Database:
+import { ref, get, set, update } from 'firebase/database';
 import { db } from '../../../../environments/environment.dev';
-import { collection, doc, setDoc, getDocs, query, where, QuerySnapshot, DocumentData } from 'firebase/firestore';
 
 //Imports:
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
+
+//Services:
+import { ChatService } from '../services/chat-service.service';
+import { AuthenticationService } from '../../../auth/services/authentication.service';
 
 @Component({
   selector: 'app-chatroom',
@@ -16,7 +20,7 @@ import { NgFor } from '@angular/common';
   imports: [RouterOutlet, FormsModule, NgFor],
   templateUrl: './chatroom.component.html',
   styleUrls: ['./chatroom.component.scss'],
-  providers: [AuthenticationService]
+  providers: [AuthenticationService, ChatService]
 })
 
 export class ChatroomComponent {
@@ -25,9 +29,14 @@ export class ChatroomComponent {
   name: string | null = ""
   email: string | null = ""
 
-  constructor(private authService: AuthenticationService, private router: Router) {}
+  constructor(
+    private authService: AuthenticationService, 
+    private router: Router,
+    private chatService: ChatService) {};
 
   ngOnInit() {
+    this.getRequests();
+
     //Checking if the user is logged in:
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
 
@@ -41,16 +50,6 @@ export class ChatroomComponent {
       } else {
         this.router.navigate(["/"]);
       }
-
-      //Code for the chatroom:
-      const messages = collection(db, "messages");
-      const message = {
-        name: "John",
-        message: "Hello",
-        time: new Date().toLocaleTimeString(),
-      }
-
-      setDoc(doc(messages, "message-id"), message);
   }
 
   //----
@@ -64,7 +63,8 @@ export class ChatroomComponent {
 
   //Add friend functionality:
   public friendName: string = "";
-  public searchResults: Array<{name: string}> = [];
+  public searchResults: Array<{name: string, uid: string}> = [];
+  public friends: Array<{name: string, uid: string}> = [];
 
   async searchFriend(name: string) {
     if(name.trim() === "") {
@@ -72,14 +72,74 @@ export class ChatroomComponent {
       return;
     }
 
-    const userRef = collection(db, "users");
-    const q = query(userRef, where("name", "==", name));
-    
-    const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+    try {
+      const userRef = ref(db, 'users/');
 
-    this.searchResults = querySnapshot.docs.map(doc => ({
-      name: doc.data()['name']
-    }));
+      const snapshot = await get(userRef);
+      if(snapshot.exists()) {
+        const users = snapshot.val();
+
+        this.searchResults = Object.values(users)
+            .filter((user: any) =>
+                user.name && user.name.toLowerCase().includes(name.toLowerCase())
+            )
+            .map((user: any) => ({
+              name: user.name,
+              uid: user.uid,
+            }));
+      } else {
+        this.searchResults = [];
+      }
+
+    } catch (err) {
+      console.log("Error while trying to search value in database: " + err);
+    }
+  }
+
+  sendRequest(friend: {name: string, uid: string}) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    const ownRequestsRef = ref(db, "requests/" + currentUser.uid + "/ownRequests"),
+          friendRequestsRef = ref(db, "requests/" + friend.uid + "/friendRequests");
+
+    update(ownRequestsRef, {
+      [friend.uid]: {
+        name: friend.name,
+        uid: friend.uid,
+        status: "requested",
+      }
+    })
+
+    update(friendRequestsRef, {
+      [currentUser.uid]: {
+        name: currentUser.displayName,
+        uid: currentUser.uid,
+        status: "requested",
+      }
+    })
+  }
+
+  //Get requests from db:
+  public requests: Array<{name: string, uid: string}> = [];
+
+  async getRequests() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    const requestsRef = ref(db, "requests/" + currentUser.uid + "/friendRequests");
+
+    const snapshot = await get(requestsRef);
+
+    if(snapshot.exists()) {
+      const friendRequests = snapshot.val();
+
+      this.requests = Object.values(friendRequests)
+                                    .map((request: any) => ({
+                                      name: request.name,
+                                      uid: request.uid,
+                                    }))
+    } else {
+      this.requests = [];
+    }
   }
 
   //handle modals:
