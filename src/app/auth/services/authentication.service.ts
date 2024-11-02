@@ -6,9 +6,8 @@ import {
     signOut, User, createUserWithEmailAndPassword, signInWithEmailAndPassword,
     updateProfile, sendEmailVerification, deleteUser } from 'firebase/auth';
 
-import { doc, setDoc } from 'firebase/firestore';
-
 import { BehaviorSubject, from, Observable } from 'rxjs';
+import { ref, set } from 'firebase/database';
 
 @Injectable({
   providedIn: 'root',
@@ -27,10 +26,12 @@ export class AuthenticationService {
       if (user && user.emailVerified) {
         this.currentUser.next(user);
         localStorage.setItem('currentUser', JSON.stringify(user));
-        
-        if(location.pathname === "/auth/login" || location.pathname === "/auth/register") {
-          location.pathname = "/chatroom";
-        }
+
+        setTimeout(() => {
+          if(location.pathname === "/auth/login" || location.pathname === "/auth/register") {
+            location.pathname = "/chatroom";
+          }
+        }, 350);
       } else {
         this.currentUser.next(null);
         localStorage.removeItem('currentUser');
@@ -39,36 +40,59 @@ export class AuthenticationService {
   };
 
   logInGoogle(): Observable<any> {
-    return from(signInWithPopup(auth, this.googleProvider));
+    return from(signInWithPopup(auth, this.googleProvider)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              const userRef = ref(db, 'users/' + user.uid);
+
+              set(userRef, {
+                name: user.displayName,
+                email: user.email,
+                uid: user.uid,
+              })
+
+              this.currentUser.next(user);
+              localStorage.setItem('currentUser', JSON.stringify(user));
+              
+              return user;
+    }));
   }
 
   registerEmailPassword(email: string, password: string, name: string): Observable<any> {
     return from(createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
+              const user = userCredential.user;
+
               //Send verification email
-              sendEmailVerification(userCredential.user)
+              sendEmailVerification(user)
                 .then(() => {
                   alert(`Verification email sent to your email address ${name}`);
                 
+                //Update user's name
+                return updateProfile(user, { displayName: name })
+                  .then(() => {
+                    this.currentUser.next(user);
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+      
+                    //Write user data to the database
+                    const userRef = ref(db, 'users/' + user.uid);        
 
-              //Changes the user's display name
-              const user = userCredential.user;
+                    set(userRef, {
+                      name: name,
+                      email: email,
+                      uid: user.uid,
+                    });
 
-              return updateProfile(user, {displayName: name}).then(() => {
-                this.currentUser.next(user);
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                
-                setDoc(doc(db, "users", name), {
-                  name: name,
-                  email: email,
-                  uid: user.uid,
+                    return user;
+                  })
+                  .catch((err) => {
+                    console.log("Error updating profile: ", err);
+                  });
+                }).catch((err) => {
+                  console.log("Error writing user data to Realtime Database: ", err);
                 });
-
-                return user;
-              })
-            });
-            })
-          )}
+            }))};
+          
 
   logInEmailPassword(email: string, password: string): Observable<any> {
     return from(signInWithEmailAndPassword(auth, email, password)

@@ -25,25 +25,24 @@
     <div class="modal add-friend-modal" [style]="addFriendModalOpacity">
         <div class="modal-inner">
             <header>
-                <h2>Add Friend</h2>
-
                 <div class="close" (click)="closeModal()">
                     
                 </div>
             </header>
 
-            <form class="add-friend-modal-body">
-                <input type="text" placeholder="Enter friend's name"
-                name="friendName"
-                [(ngModel)]="friendName"
-                (ngModelChange)="searchFriend(friendName)">
+            <div>
+                <form class="add-friend-modal-body">
+                    <input type="text" placeholder="Enter friend's name"
+                    autocomplete="off"
+                    name="friendName"
+                    [(ngModel)]="friendName"
+                    (ngModelChange)="searchFriend(friendName)">
+                </form>
 
-                <button>Add</button>
-            </form>
-
-            <ul class="friend-list">
-                <li *ngFor="let friend of searchResults">{{ friend.name }}</li>
-            </ul>
+                <ul class="add-friend-list">
+                    <li *ngFor="let friend of searchResults">{{ friend.name }} - <button (click)="sendRequest(friend)">Add Friend</button></li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -59,15 +58,18 @@
                 <input type="text" placeholder="Search">
             </div>
 
-            <button (click)="showModal('friends')">add friend by name</button>
+            <button (click)="showModal('friends')">Add friend</button>
         </div>
 
-        <ul>
-            <li>asd</li>
-            <li>asd</li>
-            <li>asd</li>
-            <li>asd</li>
-        </ul>
+        <div>
+            <ul>
+                <li *ngFor="let request of requests">{{request.name}} is want to be friends with you!</li>
+            </ul>
+
+            <ul>
+                
+            </ul>
+        </div>
     </aside>
 
     <main>

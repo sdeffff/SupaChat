@@ -34,8 +34,6 @@ export class LoginComponent {
 
     if(user && user.emailVerified) {
       this.router.navigate(["/chatroom"]);
-    } else {
-      console.log("asd");
     }
   }
 
