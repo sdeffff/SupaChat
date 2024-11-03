@@ -1,10 +1,5 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { Observable } from 'rxjs';
-
-//Database:
-import { ref, get, set, update } from 'firebase/database';
-import { db } from '../../../../environments/environment.dev';
 
 //Imports:
 import { FormsModule } from '@angular/forms';
@@ -36,6 +31,7 @@ export class ChatroomComponent {
 
   ngOnInit() {
     this.getRequests();
+    this.getFriends();
 
     //Checking if the user is logged in:
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -64,7 +60,6 @@ export class ChatroomComponent {
   //Add friend functionality:
   public friendName: string = "";
   public searchResults: Array<{name: string, uid: string}> = [];
-  public friends: Array<{name: string, uid: string}> = [];
 
   async searchFriend(name: string) {
     if(name.trim() === "") {
@@ -73,73 +68,36 @@ export class ChatroomComponent {
     }
 
     try {
-      const userRef = ref(db, 'users/');
-
-      const snapshot = await get(userRef);
-      if(snapshot.exists()) {
-        const users = snapshot.val();
-
-        this.searchResults = Object.values(users)
-            .filter((user: any) =>
-                user.name && user.name.toLowerCase().includes(name.toLowerCase())
-            )
-            .map((user: any) => ({
-              name: user.name,
-              uid: user.uid,
-            }));
-      } else {
-        this.searchResults = [];
-      }
-
+      this.searchResults = await this.chatService.searchFriend(name);
     } catch (err) {
       console.log("Error while trying to search value in database: " + err);
     }
   }
 
+  //Send request to add friend:
   sendRequest(friend: {name: string, uid: string}) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-
-    const ownRequestsRef = ref(db, "requests/" + currentUser.uid + "/ownRequests"),
-          friendRequestsRef = ref(db, "requests/" + friend.uid + "/friendRequests");
-
-    update(ownRequestsRef, {
-      [friend.uid]: {
-        name: friend.name,
-        uid: friend.uid,
-        status: "requested",
-      }
-    })
-
-    update(friendRequestsRef, {
-      [currentUser.uid]: {
-        name: currentUser.displayName,
-        uid: currentUser.uid,
-        status: "requested",
-      }
-    })
+    this.chatService.sendRequest(friend);
   }
 
   //Get requests from db:
-  public requests: Array<{name: string, uid: string}> = [];
+  public requests: Array<{name: string, uid: string, pfp: string}> = [];
 
   async getRequests() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.requests = await this.chatService.getRequests();
+  }
 
-    const requestsRef = ref(db, "requests/" + currentUser.uid + "/friendRequests");
+  //Get friends of current user from db:
+  public friends: Array<{name: string, uid: string, pfp: string}> = [];
 
-    const snapshot = await get(requestsRef);
 
-    if(snapshot.exists()) {
-      const friendRequests = snapshot.val();
+  //Accepting the request from another user:
+  async acceptRequest(request: {name: string, uid: string, pfp: string}) {
+    await this.chatService.acceptRequest(request);
+    window.location.reload();
+  }
 
-      this.requests = Object.values(friendRequests)
-                                    .map((request: any) => ({
-                                      name: request.name,
-                                      uid: request.uid,
-                                    }))
-    } else {
-      this.requests = [];
-    }
+  async getFriends() {
+    this.friends = await this.chatService.getFriends();
   }
 
   //handle modals:

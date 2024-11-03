@@ -14,7 +14,10 @@ section {
     aside {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1rem;
+
+        width: 22.5rem;
+        height: 100vh;
 
         background-color: $purple;
 
@@ -29,7 +32,7 @@ section {
             padding-block: .75rem;
 
             background-color: #403a6500;
-            border-radius: 1rem;
+            border-radius: .5rem;
 
             transition: .25s ease;
             cursor: pointer;
@@ -81,6 +84,8 @@ section {
                     color: $white;
     
                     padding-block: .25rem;
+
+                    width: 100%;
                     
                     font-size: 1rem;
     
@@ -112,12 +117,134 @@ section {
             }
         }
 
-        ul {
+        .aside-main {
             display: flex;
             flex-direction: column;
+            
+            gap: .25rem;
 
-            li {
-                cursor: pointer;
+            h2 {
+                font-weight: 500;
+                font-size: 1.65rem;
+            }
+
+            .friends {
+                padding-bottom: .5rem;
+        
+                gap: .4rem;
+
+                max-height: 20.25rem;
+                height: 20.25rem;
+
+                overflow: hidden;
+                overflow-y: scroll;
+
+                &::-webkit-scrollbar {
+                    height: 6px;
+                    width: .5rem;
+                }
+        
+                &::-webkit-scrollbar-thumb {
+                    background-color: $white;
+                    border-radius: .25rem;
+                }
+        
+                border-bottom: 1px solid #f5f5f5;
+        
+                .friend {
+                    padding: .75rem .25rem;
+                    border-radius: .5rem;
+        
+                    transition: .25s ease;
+        
+                    &:is(:hover, :focus) {
+                        background-color: #403a656f;
+                    }
+        
+                    a {
+                        color: #f5f5f5;
+                    }
+                }
+            }
+        
+            .requests {
+                max-height: 7rem;
+                height: 100%;
+                overflow: hidden;
+                overflow-y: scroll;
+        
+                padding: .25rem;
+        
+                &::-webkit-scrollbar {
+                    height: 6px;
+                    width: .5rem;
+                }
+        
+                &::-webkit-scrollbar-thumb {
+                    background-color: $white;
+                    border-radius: .25rem;
+                }
+            }
+
+            ul {
+                display: flex;
+                flex-direction: column;
+    
+                gap: 1rem;
+    
+                .friend-request, .friend {
+                    article {
+                        display: flex;
+                        flex-direction: column;
+    
+                        gap: .5rem;
+    
+                        header {
+                            display: flex;
+                            align-items: center;
+    
+                            gap: .25rem;
+    
+                            h2 {
+                                font-weight: 400;
+                                font-size: 1.75rem;
+                            }
+    
+                            img {
+                                border-radius: 50%;
+                                max-width: 2rem;
+                            }
+                        }
+    
+                        div {
+                            p {
+                                font-size: 1.05rem;
+                            
+                                span {
+                                    color: $light-purple;
+                                }
+                            }
+                        }
+    
+                        button {
+                            padding-block: .25rem;
+                            border-radius: .25rem;
+    
+                            color: #fff;
+                            font-size: 1.05rem;
+    
+                            border: 1px solid #fff;
+                            background: none;
+    
+                            transition: .25s ease;
+    
+                            &:is(:hover, :focus) {
+                                background-color: $light-purple;
+                                border-color: $light-purple;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
