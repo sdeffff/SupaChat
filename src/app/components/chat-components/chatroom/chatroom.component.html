@@ -1,5 +1,5 @@
 <section>
-    <div class="modal" [style]="modalOpacity">
+    <div class="modal profile" [style]="modalOpacity">
         <div class="modal-inner">
             <header>
                 <img [src]="profileSrc" alt="">
@@ -61,13 +61,38 @@
             <button (click)="showModal('friends')">Add friend</button>
         </div>
 
-        <div>
-            <ul>
-                <li *ngFor="let request of requests">{{request.name}} is want to be friends with you!</li>
+        <div class="aside-main">
+            <h2>Your friends</h2>
+
+            <ul class="friends">
+                <li *ngFor="let friend of friends" class="friend">
+                    <a href="">
+                        <article>
+                            <header>
+                                <img [src]="friend.pfp" alt="">
+                                <h2>{{friend.name.split(" ")[0]}}</h2>
+                            </header>
+                        </article>
+                    </a>
+                </li>
             </ul>
 
-            <ul>
-                
+            <h2>Friend requests</h2>
+
+            <ul class="requests">
+                <li *ngFor="let request of requests" class="friend-request">
+                    <article>
+                        <header>
+                            <img [src]="request.pfp" alt="">
+                            <h2>{{request.name.split(" ")[0]}}</h2>
+                        </header>
+
+                        <div>
+                            <p>Want to be <span>friends</span> with you!</p>
+                        </div>
+                        <button (click)="acceptRequest(request)" (click)="getFriends()">Add!</button>
+                    </article>
+                </li>
             </ul>
         </div>
     </aside>

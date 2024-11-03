@@ -6,8 +6,10 @@ import {
     signOut, User, createUserWithEmailAndPassword, signInWithEmailAndPassword,
     updateProfile, sendEmailVerification, deleteUser } from 'firebase/auth';
 
-import { BehaviorSubject, from, Observable } from 'rxjs';
-import { ref, set } from 'firebase/database';
+import { BehaviorSubject, from, Observable, firstValueFrom } from 'rxjs';
+import { ref, set, get } from 'firebase/database';
+
+import { ChatService } from '../../components/chat-components/services/chat-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +19,7 @@ export class AuthenticationService {
 
   public currentUser = new BehaviorSubject<User | null>(null);
 
-  constructor() {
+  constructor(private chatService: ChatService) {
     //To store info about the current user
     //If the user is logged in, the currentUser will be updated with the user object
 
@@ -41,20 +43,29 @@ export class AuthenticationService {
 
   logInGoogle(): Observable<any> {
     return from(signInWithPopup(auth, this.googleProvider)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
               const user = userCredential.user;
-              const userRef = ref(db, 'users/' + user.uid);
-
-              set(userRef, {
-                name: user.displayName,
-                email: user.email,
-                uid: user.uid,
-              })
 
               this.currentUser.next(user);
               localStorage.setItem('currentUser', JSON.stringify(user));
-              
-              return user;
+
+              const userRef = ref(db, 'users/' + user.uid);
+
+              const snapshot = await get(userRef);
+
+              if(snapshot.exists()) {
+                return;
+              } else {
+                set(userRef, {
+                  name: user.displayName,
+                  email: user.email,
+                  uid: user.uid,
+                  pfp: user.photoURL,
+                  friends: [],
+                })
+                
+                return user;
+              }
     }));
   }
 
@@ -77,10 +88,14 @@ export class AuthenticationService {
                     //Write user data to the database
                     const userRef = ref(db, 'users/' + user.uid);        
 
+                    updateProfile(user, {photoURL: `https://eu.ui-avatars.com/api/?name=${name.split(" ")[0]}&size=250%22`});
+
                     set(userRef, {
                       name: name,
                       email: email,
                       uid: user.uid,
+                      pfp: `https://eu.ui-avatars.com/api/?name=${name.split(" ")[0]}&size=250%22`,
+                      friends: [],
                     });
 
                     return user;
