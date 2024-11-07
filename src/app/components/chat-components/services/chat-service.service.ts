@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
 //Database:
-import { ref, get, set, update, remove } from 'firebase/database';
+import { arrayUnion } from 'firebase/firestore';
+import { ref, get, set, update, remove, serverTimestamp, push } from 'firebase/database';
 import { db } from '../../../../environments/environment.dev';
 
 @Injectable({
@@ -38,6 +39,11 @@ export class ChatService {
   //#2 Send a friend request:
   async sendRequest(friend: {name: string, uid: string}) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    if(currentUser.uid === friend.uid) {
+      alert("You cannot send a request to yourself");
+      return;
+    }
 
     const ownRequestsRef = ref(db, "requests/" + currentUser.uid + "/ownRequests"),
           friendRequestsRef = ref(db, "requests/" + friend.uid + "/friendRequests"),
@@ -151,5 +157,136 @@ export class ChatService {
     } else {
       return [];
     }
+  }
+
+  //----------------------------------------------------
+  //Chat functionality:
+  //Chat ID generation:
+  private currentUserChat: string = localStorage.getItem('currentUserChat') || "";
+
+  generateChatId(uid: string) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    return currentUser.uid > uid ? `${currentUser.uid}_${uid}` : `${uid}_${currentUser.uid}`;
+  }
+
+  //Change chat:
+  async changeChat(uid: string) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  
+    this.currentUserChat = this.generateChatId(uid);
+    localStorage.setItem('currentUserChat', this.currentUserChat);
+
+    const chatRef = ref(db, "userchats/" + currentUser.uid + "/chatrooms/" + this.currentUserChat),
+          snap = await(get(chatRef));
+
+    if(!snap.exists()) {
+      this.createChat(uid);
+    } else {
+      const chatRef = ref(db, "chatrooms/" + snap.val().chatRoomId);
+
+      const chatSnap = await get(chatRef);
+      localStorage.setItem('currentChat', chatSnap.key || "");
+
+      this.getMessages();
+    }
+  }
+
+  //Chat Creation:
+  async createChat(uid: string) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.currentUserChat = this.generateChatId(uid);
+
+    const currUserChatRef = ref(db, "userchats/" + currentUser.uid + "/chatrooms/" + this.currentUserChat),
+          friendChatRef = ref(db, "userchats/" + uid + "/chatrooms/" + this.currentUserChat);
+
+    const snap = await get(currUserChatRef);
+
+    if(snap.exists()) return;
+
+    const chatRef = ref(db, "chatrooms/"),
+          newChatRef = push(chatRef);
+
+    set(newChatRef, {
+      createdAt: serverTimestamp(),
+      chatId: newChatRef.key,
+      messages: [],
+    });
+
+    localStorage.setItem('currentChat', newChatRef.key || "");
+
+    update(currUserChatRef, {
+        chatRoomId: newChatRef.key,
+        lastMsg: "",
+        receiverId: uid,
+        updatedAt: Date.now(),
+    });
+
+    update(friendChatRef, {
+        chatRoomId: newChatRef.key,
+        lastMsg: "",
+        receiverId: currentUser.uid,
+        updatedAt: Date.now(),
+    });
+  }
+
+  async getMessages() {
+    const chatId = localStorage.getItem('currentChat'),
+          chatRef = ref(db, `chatrooms/${chatId}/messages`),
+          chatSnap = await get(chatRef),
+          messages: Array<{content: string, senderId: string, timestamp: number}> = [];
+
+    if (!chatSnap.exists()) return [];
+
+    const chatData = chatSnap.val();
+    
+    for(let messageId in chatSnap.val()) {
+      messages.push(chatData[messageId]);
+    }
+    
+    return messages;
+  }
+
+  async sendMessage(message: string) {
+    if (!message || message.trim() === "") return;
+
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}'),
+          chatId = localStorage.getItem('currentChat');
+
+    if (!currentUser || !chatId) {
+        console.error("Current user or chat ID not found.");
+        return;
+    }
+
+    const messageData = {
+        content: message.trim(),
+        senderId: currentUser.uid,
+        timestamp: serverTimestamp(),
+    };
+
+    let chatRef = ref(db, `chatrooms/${chatId}/messages`);
+    const chatRefSnap = await get(chatRef);
+
+    if (!chatRefSnap.exists()) chatRef = ref(db, `chatrooms/${chatId}/messages/` + 1);
+    else chatRef = ref(db, `chatrooms/${chatId}/messages/` + (chatRefSnap.size + 1));
+
+    await set(chatRef, messageData);
+
+    const currentUserChatRef = ref(db, `userchats/${currentUser.uid}/chatrooms/${this.currentUserChat}`);
+    const receiverId = (await get(currentUserChatRef)).val()?.receiverId;
+
+    if (!receiverId) {
+        console.error("Receiver ID not found.");
+        return;
+    }
+
+    const friendChatRef = ref(db, `userchats/${receiverId}/chatrooms/${this.currentUserChat}`);
+    const updates = {
+        lastMsg: messageData.content,
+        updatedAt: Date.now(),
+    };
+
+    await update(currentUserChatRef, updates);
+    await update(friendChatRef, updates);
   }
 }

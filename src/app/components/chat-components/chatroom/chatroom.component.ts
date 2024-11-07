@@ -100,6 +100,26 @@ export class ChatroomComponent {
     this.friends = await this.chatService.getFriends();
   }
 
+  //Creating chat:
+  async changeChat(uid: string) {
+    await this.chatService.changeChat(uid);
+    await this.getMessages();
+  }
+
+  //Send message:
+  public inputMessage: string = "";
+  sendMessage() {
+    this.chatService.sendMessage(this.inputMessage);
+  }
+
+  //Get messages from db:
+  public messages: Array<{content: string, senderId: string, timestamp: number}> = [];
+
+  async getMessages() {
+    this.messages = await this.chatService.getMessages();
+    console.log(this.messages, localStorage);
+  }
+
   //handle modals:
   public modalOpacity: string = "opacity: 0; visibility: hidden; pointer-events: none;";
   public addFriendModalOpacity: string = "opacity: 0; visibility: hidden; pointer-events: none;";

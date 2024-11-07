@@ -29,17 +29,32 @@ export class AuthenticationService {
         this.currentUser.next(user);
         localStorage.setItem('currentUser', JSON.stringify(user));
 
+        this.createUserChatroom();
+
         setTimeout(() => {
           if(location.pathname === "/auth/login" || location.pathname === "/auth/register") {
             location.pathname = "/chatroom";
           }
         }, 350);
-      } else {
-        this.currentUser.next(null);
-        localStorage.removeItem('currentUser');
-      }
+      } else this.logOut();
     })
   };
+
+  async createUserChatroom() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    const userChatRef = ref(db, 'userchats/' + currentUser.uid);
+
+    const snapshot = await get(userChatRef);
+
+    if(snapshot.exists()) {
+      return;
+    } else {
+      set(userChatRef, {
+        chatrooms: [],
+      });
+    }
+  }
 
   logInGoogle(): Observable<any> {
     return from(signInWithPopup(auth, this.googleProvider)
