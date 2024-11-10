@@ -102,8 +102,13 @@
             <a href=""><h2>SupaChat</h2></a>
         </header>
 
-        <ul class="main-chat">
-            <li *ngFor="let key of messages">{{key.content}}</li>
+        <ul class="main-chat" #chatContainer>
+            <li *ngFor="let key of messages" [ngClass]="getUserClass(key.senderId)" class="message">
+                <div>
+                    <p>{{key.content}}</p>
+                    <img [src]="getPfp(key.senderId)" alt="">
+                </div>
+            </li>
         </ul>
 
         <div class="input-wrapper">
