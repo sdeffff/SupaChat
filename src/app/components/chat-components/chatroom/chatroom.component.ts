@@ -35,6 +35,8 @@ export class ChatroomComponent {
   ngOnInit() {
     this.getRequests();
     this.getFriends();
+    localStorage.setItem('currentUserChat', "");
+    localStorage.setItem('currentChat', "");
 
     //Checking if the user is logged in:
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
