@@ -60,9 +60,6 @@ export class ChatService {
             alert("You are already friends with this user");
             return of();
           }
-        } else {
-          alert("You are already friends with this user");
-          return of();
         }
 
         const ownRequestsSnapshot = ref(db, "requests/" + currentUser.uid + "/ownRequests/" + friend.uid);
