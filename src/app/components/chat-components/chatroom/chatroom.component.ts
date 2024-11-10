@@ -123,7 +123,7 @@ export class ChatroomComponent {
   public messages: Array<{content: string, senderId: string, timestamp: number}> = [];
 
   //Creating chat:
-  async changeChat(uid: string) {
+  changeChat(uid: string) {
     this.chatService.changeChat(uid).subscribe((messages) => {
       this.messages = messages;
     });
