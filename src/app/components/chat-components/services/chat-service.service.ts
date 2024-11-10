@@ -29,6 +29,7 @@ export class ChatService {
           return {
             name: user.name,
             uid: user.uid,
+            pfp: user.pfp,
           }
         })
     }

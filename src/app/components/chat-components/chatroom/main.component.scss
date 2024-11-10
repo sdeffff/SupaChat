@@ -1,0 +1,136 @@
+$purple: #272438;
+$light-purple: #8270E2;
+$white: #f5f5f5;
+$dark-purple: #1F1D2B; 
+
+section {
+    main {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        padding-bottom: 3.75rem;
+
+        width: 100%;
+
+        .main-chat {
+            width: 100%;
+            height: 100%;
+
+            overflow: hidden;
+            
+            display: flex;
+            flex-direction: column;
+            gap: .75rem;
+
+            padding: 1rem 2rem;
+            overflow-y: scroll;
+
+            &::-webkit-scrollbar {
+                height: 6px;
+                width: .5rem;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: $light-purple;
+                border-radius: .25rem;
+            }
+
+            .message {
+                div {
+                    display: flex;
+                    align-items: center;
+                    gap: .5rem;
+
+                    img {
+                        max-width: 2rem;
+                        border-radius: 50%;
+                    }
+
+                    p {
+                        font-size: 1.1rem;
+                        
+                        max-width: 30vw;
+                        word-break: break-word;
+                    }
+                }
+
+                &.current-user {
+                    align-self: end;
+                }
+
+                &.other-user {
+                    align-self: start;
+
+                    div {
+                        flex-direction: row-reverse;
+                    }
+                }
+            }
+        }
+
+        header {
+            display: flex;
+            justify-content: end;
+
+            padding: 1.25rem 2rem;
+
+            background-color: $purple;
+
+            a {
+                color: $white;
+
+                h2 {
+                    font-size: 1.75rem;
+                    font-weight: 400;
+                }
+            }
+        }
+
+        .input-wrapper {
+            padding-inline: 2rem;
+
+            div {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                padding: .75rem 1.5rem;
+
+                border-radius: .75rem;
+                background-color: $purple;
+
+                input {
+                    width: 100%;
+                    padding-right: 1rem;
+                    padding-block: 0.25rem;
+
+                    background: none;
+                    outline: none;
+                    border: none;
+
+                    font-size: 1.1rem;
+
+                    color: $white;
+                }
+
+                button {
+                    display: flex;
+                    align-items: center;
+
+                    background: none;
+
+                    img {
+                        width: 1.5rem;
+                
+                        transition: .25s ease;
+
+                        &:is(:hover, :focus) {
+                            transform: translateX(.25rem);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
