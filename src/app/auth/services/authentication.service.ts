@@ -6,7 +6,7 @@ import {
     signOut, User, createUserWithEmailAndPassword, signInWithEmailAndPassword,
     updateProfile, sendEmailVerification, deleteUser } from 'firebase/auth';
 
-import { BehaviorSubject, from, Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, from, Observable, firstValueFrom, map } from 'rxjs';
 import { ref, set, get } from 'firebase/database';
 
 import { ChatService } from '../../components/chat-components/services/chat-service.service';
@@ -29,21 +29,38 @@ export class AuthenticationService {
         this.currentUser.next(user);
         localStorage.setItem('currentUser', JSON.stringify(user));
 
+        this.createUserChatroom();
+
         setTimeout(() => {
           if(location.pathname === "/auth/login" || location.pathname === "/auth/register") {
             location.pathname = "/chatroom";
           }
         }, 350);
-      } else {
-        this.currentUser.next(null);
-        localStorage.removeItem('currentUser');
-      }
+      } else this.logOut();
     })
   };
 
+  createUserChatroom():Observable<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    const userChatRef = ref(db, 'userchats/' + currentUser.uid);
+
+    return from(get(userChatRef)).pipe(
+      map((snapshot) => {
+      if(snapshot.exists()) {
+        return;
+      } else {
+        set(userChatRef, {
+          chatrooms: [],
+        });
+      }
+    }));
+  }
+
   logInGoogle(): Observable<any> {
-    return from(signInWithPopup(auth, this.googleProvider)
-            .then(async (userCredential) => {
+    return from(signInWithPopup(auth, this.googleProvider))
+            .pipe(
+              map((userCredential) => {
               const user = userCredential.user;
 
               this.currentUser.next(user);
@@ -51,27 +68,28 @@ export class AuthenticationService {
 
               const userRef = ref(db, 'users/' + user.uid);
 
-              const snapshot = await get(userRef);
-
-              if(snapshot.exists()) {
-                return;
-              } else {
-                set(userRef, {
-                  name: user.displayName,
-                  email: user.email,
-                  uid: user.uid,
-                  pfp: user.photoURL,
-                  friends: [],
-                })
-                
-                return user;
-              }
-    }));
+              return from((get(userRef))).pipe(
+                map((snapshot) => {
+                if(snapshot.exists()) {
+                  return;
+                } else {
+                  set(userRef, {
+                    name: user.displayName,
+                    email: user.email,
+                    uid: user.uid,
+                    pfp: user.photoURL,
+                    friends: [],
+                  })
+                  
+                  return user;
+                };
+              }))
+            }))
   }
 
   registerEmailPassword(email: string, password: string, name: string): Observable<any> {
-    return from(createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+    return from(createUserWithEmailAndPassword(auth, email, password)).pipe(
+              map((userCredential) => {
               const user = userCredential.user;
 
               //Send verification email
@@ -110,8 +128,9 @@ export class AuthenticationService {
           
 
   logInEmailPassword(email: string, password: string): Observable<any> {
-    return from(signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+    return from(signInWithEmailAndPassword(auth, email, password))
+            .pipe(
+              map((userCredential) => {
               const user = userCredential.user;
 
               this.currentUser.next(user);

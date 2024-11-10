@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 
 //Imports:
 import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { NgFor, NgClass } from '@angular/common';
 
 //Services:
 import { ChatService } from '../services/chat-service.service';
@@ -12,7 +12,7 @@ import { AuthenticationService } from '../../../auth/services/authentication.ser
 @Component({
   selector: 'app-chatroom',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, NgFor],
+  imports: [RouterOutlet, FormsModule, NgFor, NgClass],
   templateUrl: './chatroom.component.html',
   styleUrls: ['./chatroom.component.scss'],
   providers: [AuthenticationService, ChatService]
@@ -22,7 +22,10 @@ export class ChatroomComponent {
   public shortName: string = ""
   profileSrc: string | null = ""
   name: string | null = ""
-  email: string | null = ""
+  email: string | null = "";
+
+
+  @ViewChild('chatContainer') chat!: ElementRef;
 
   constructor(
     private authService: AuthenticationService, 
@@ -48,10 +51,21 @@ export class ChatroomComponent {
       }
   }
 
+  ngAfterViewInit() {
+    try {
+      this.chat.nativeElement.scrollTo({
+        top: this.chat.nativeElement.scrollHeight,
+        behavior: 'smooth'
+      });
+    } catch (err) {
+      console.error('Scrolling failed:', err);
+    }
+  }
+
   //----
   logOut() {
     this.authService.logOut().subscribe({
-      next: (res) => {
+      next: () => { 
         this.router.navigate(["/"]);
       }
     });
@@ -76,19 +90,20 @@ export class ChatroomComponent {
 
   //Send request to add friend:
   sendRequest(friend: {name: string, uid: string}) {
-    this.chatService.sendRequest(friend);
+    this.chatService.sendRequest(friend).subscribe();
   }
 
   //Get requests from db:
   public requests: Array<{name: string, uid: string, pfp: string}> = [];
 
-  async getRequests() {
-    this.requests = await this.chatService.getRequests();
+  getRequests() {
+    this.chatService.getRequests().subscribe((res) => {
+      this.requests = res;
+    });
   }
 
   //Get friends of current user from db:
   public friends: Array<{name: string, uid: string, pfp: string}> = [];
-
 
   //Accepting the request from another user:
   async acceptRequest(request: {name: string, uid: string, pfp: string}) {
@@ -96,9 +111,50 @@ export class ChatroomComponent {
     window.location.reload();
   }
 
-  async getFriends() {
-    this.friends = await this.chatService.getFriends();
+  getFriends() {
+    this.chatService.getFriends().subscribe({
+      next: (data) => {this.friends = data},
+      error: (err) => {console.log(err)}
+    });
   }
+
+  public messages: Array<{content: string, senderId: string, timestamp: number}> = [];
+
+  //Creating chat:
+  async changeChat(uid: string) {
+    this.chatService.changeChat(uid).subscribe((messages) => {
+      this.messages = messages;
+    });
+  }
+
+  //Send message:
+  public inputMessage: string = "";
+
+  sendMessage() {
+    if(localStorage.getItem('currentUserChat') === "") return;
+
+    this.chatService.sendMessage(this.inputMessage).subscribe({
+      next: (messages) => {
+        this.inputMessage = "";
+        this.messages = messages;
+      }
+    });
+
+    this.chat.nativeElement.scrollTo({
+      top: this.chat.nativeElement.scrollHeight,
+      behavior: 'smooth'
+    });
+  }
+
+  getPfp(uid: string) {
+    if(uid === JSON.parse(localStorage.getItem('currentUser')!).uid) return this.profileSrc;
+
+    for(let friend of this.friends) {
+      if(friend.uid === uid) return friend.pfp;
+    }
+
+    return '';
+  } 
 
   //handle modals:
   public modalOpacity: string = "opacity: 0; visibility: hidden; pointer-events: none;";
@@ -115,5 +171,10 @@ export class ChatroomComponent {
   closeModal() {
     this.modalOpacity = "opacity: 0 ; visibility: hidden; pointer-events: none;";
     this.addFriendModalOpacity = "opacity: 0 ; visibility: hidden; pointer-events: none;";
+  }
+
+  //set styles for the messages:
+  getUserClass(senderId: string) {
+    return senderId === JSON.parse(localStorage.getItem('currentUser')!).uid ? "current-user" : "other-user";
   }
 }

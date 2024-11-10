@@ -65,15 +65,15 @@
             <h2>Your friends</h2>
 
             <ul class="friends">
-                <li *ngFor="let friend of friends" class="friend">
-                    <a href="">
+                <li *ngFor="let friend of friends" class="friend" (click)="changeChat(friend.uid)">
+                    <div>
                         <article>
                             <header>
                                 <img [src]="friend.pfp" alt="">
                                 <h2>{{friend.name.split(" ")[0]}}</h2>
                             </header>
                         </article>
-                    </a>
+                    </div>
                 </li>
             </ul>
 
@@ -102,15 +102,27 @@
             <a href=""><h2>SupaChat</h2></a>
         </header>
 
-        <div class="main-chat">
-
-        </div>
+        <ul class="main-chat" #chatContainer>
+            <li *ngFor="let key of messages" [ngClass]="getUserClass(key.senderId)" class="message">
+                <div>
+                    <p>{{key.content}}</p>
+                    <img [src]="getPfp(key.senderId)" alt="">
+                </div>
+            </li>
+        </ul>
 
         <div class="input-wrapper">
             <div>
-                <input type="text" placeholder="Write something">
+                <input
+                name="inputMessage"
+                #msg="ngModel"
+                [(ngModel)]="inputMessage"
+                (keyup.enter)="sendMessage()"
+                type="text" 
+                placeholder="Write something"
+                autocomplete="off">
 
-                <button><img src="../../../../assets/imgs/chat-icons/send-msg.svg" alt=""></button>
+                <button (click)="sendMessage()"><img src="../../../../assets/imgs/chat-icons/send-msg.svg" alt=""></button>
             </div>
         </div>
     </main>
