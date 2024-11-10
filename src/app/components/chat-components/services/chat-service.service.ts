@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 
 //Database:
-import { ref, get, set, update, remove, serverTimestamp, push } from 'firebase/database';
+import { ref, get, set, update, remove, serverTimestamp, push, onValue } from 'firebase/database';
 import { db } from '../../../../environments/environment.dev';
 
 import { from, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -187,23 +188,20 @@ export class ChatService {
     localStorage.setItem('currentUserChat', chatId);
 
     return from(get(currentUserChatRef)).pipe(
-        switchMap((snap) => {
-            if (!snap.exists()) {
-              return this.createChat(uid).pipe(
-                switchMap(() => this.getMessages())
-            );
-            } else {
-                const chatRoomId = snap.val().chatRoomId;
-                const chatRef = ref(db, `chatrooms/${chatRoomId}`);
-                
-                return from(get(chatRef)).pipe(
-                    tap((chatSnap) => {
-                        localStorage.setItem('currentChat', chatSnap.key!);
-                    }),
-                    switchMap(() => this.getMessages())
-                );
-            }
-        })
+      switchMap((snap) => {
+        if (!snap.exists()) {
+          return this.createChat(uid).pipe(
+            switchMap((newChatId) => {
+              localStorage.setItem('currentChat', newChatId);
+              return this.listenForMessages(newChatId);
+            })
+          );
+        } else {
+          const chatRoomId = snap.val().chatRoomId;
+          localStorage.setItem('currentChat', chatRoomId);
+          return this.listenForMessages(chatRoomId);
+        }
+      })
     );
   }
 
@@ -243,10 +241,31 @@ export class ChatService {
     );
   }
 
+  private messagesSubject = new BehaviorSubject<any[]>([]);
+
+  listenForMessages(chatId: string): Observable<any[]> {
+    const messagesRef = ref(db, `chatrooms/${chatId}/messages`);
+    
+    // Real-time listener for messages
+    onValue(messagesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const messagesArray = Object.values(snapshot.val()).map((msg: any) => ({
+          content: msg.content,
+          senderId: msg.senderId,
+          timestamp: msg.timestamp,
+        }));
+        this.messagesSubject.next(messagesArray); // Emit updated messages
+      } else {
+        this.messagesSubject.next([]); // Emit empty array if no messages exist
+      }
+    });
+
+    return this.messagesSubject.asObservable();
+  }
+
   getMessages():Observable<any> {
     const chatId = localStorage.getItem('currentChat'),
-          chatRef = ref(db, `chatrooms/${chatId}/messages`),
-          messages: Array<{content: string, senderId: string, timestamp: number}> = [];
+          chatRef = ref(db, `chatrooms/${chatId}/messages`);
 
     return from(get(chatRef)).pipe(
         switchMap((snapshot) => {
