@@ -14,7 +14,7 @@ import { AuthenticationService } from '../../../auth/services/authentication.ser
   standalone: true,
   imports: [RouterOutlet, FormsModule, NgFor, NgClass],
   templateUrl: './chatroom.component.html',
-  styleUrls: ['./chatroom.component.scss'],
+  styleUrls: ['./aside.component.scss', './main.component.scss', './modal.component.scss'],
   providers: [AuthenticationService, ChatService]
 })
 
@@ -73,7 +73,7 @@ export class ChatroomComponent {
 
   //Add friend functionality:
   public friendName: string = "";
-  public searchResults: Array<{name: string, uid: string}> = [];
+  public searchResults: Array<{name: string, uid: string, pfp: string}> = [];
 
   async searchFriend(name: string) {
     if(name.trim() === "") {

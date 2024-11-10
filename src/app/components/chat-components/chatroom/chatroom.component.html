@@ -40,7 +40,12 @@
                 </form>
 
                 <ul class="add-friend-list">
-                    <li *ngFor="let friend of searchResults">{{ friend.name }} - <button (click)="sendRequest(friend)">Add Friend</button></li>
+                    <li *ngFor="let friend of searchResults">
+                        <div>
+                            <img [src]="friend.pfp" alt="">
+                            <p>{{ friend.name }} - </p>
+                        </div>
+                        <button (click)="sendRequest(friend)">Add Friend</button></li>
                 </ul>
             </div>
         </div>
