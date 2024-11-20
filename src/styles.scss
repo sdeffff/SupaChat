@@ -60,6 +60,16 @@ button {
     cursor: pointer;
 }
 
+input {
+    outline: none;
+    border: none;
+    background: none;
+}
+
+h1, h2 {
+    font-weight: 400;
+}
+
 html {
     background-color: #1D1E33;
 }
