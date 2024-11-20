@@ -26,6 +26,7 @@ export class ChatroomComponent {
 
 
   @ViewChild('chatContainer') chat!: ElementRef;
+  @ViewChild('emojisList') emjs!: ElementRef;
 
   constructor(
     private authService: AuthenticationService, 
@@ -54,6 +55,15 @@ export class ChatroomComponent {
   }
 
   ngAfterViewInit() {
+    //Handle emojis:
+    for(let child of this.emjs.nativeElement.children) {
+      child.addEventListener('click', () => {
+        this.inputMessage += child.innerHTML;
+      });
+    }
+
+
+
     try {
       this.chat.nativeElement.scrollTo({
         top: this.chat.nativeElement.scrollHeight,
@@ -62,6 +72,12 @@ export class ChatroomComponent {
     } catch (err) {
       console.error('Scrolling failed:', err);
     }
+  }
+
+  public emojisListStyles: string = "transform: scale(0)";
+
+  showEmojis() {
+    this.emojisListStyles = "transform: scale(1)";
   }
 
   //----
@@ -147,6 +163,9 @@ export class ChatroomComponent {
       behavior: 'smooth'
     });
   }
+
+  //handle emojis:
+
 
   getPfp(uid: string) {
     if(uid === JSON.parse(localStorage.getItem('currentUser')!).uid) return this.profileSrc;
