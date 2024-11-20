@@ -50,7 +50,6 @@ section {
                 text-align: center;
 
                 font-size: 1.75rem;
-                font-weight: 400;
 
                 p {
                     font-size: 1.25rem;
@@ -79,9 +78,6 @@ section {
                 }
     
                 input {
-                    outline: none;
-                    border: none;
-                    background: none;
                     border-bottom: 1px solid #6d6d6d;
     
                     color: $white;
@@ -201,7 +197,6 @@ section {
                             gap: .25rem;
     
                             h2 {
-                                font-weight: 400;
                                 font-size: 1.5rem;
                             }
     

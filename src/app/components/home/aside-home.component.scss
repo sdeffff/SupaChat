@@ -1,0 +1,113 @@
+$purple: #272438;
+$light-purple: #8270E2;
+$white: #f5f5f5;
+$dark-purple: #1F1D2B; 
+
+aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    color: $white;
+
+    max-width: 25vw;
+
+    div {
+        background-color: $purple;
+
+        padding: 1.5rem .75rem;
+        border-radius: .75rem;
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .playlist {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            li {
+                display: flex;
+                flex-direction: column;
+                gap: .65rem;
+
+                cursor: pointer;
+                height: 2.5vw;
+                overflow: hidden;
+                padding-block: .25rem;
+
+                transition: .45s ease;
+
+                header {
+                    h2 {
+                        font-weight: 300;
+                    }
+                    
+                    img {
+                        max-width: 1.1rem;
+                    }
+                }
+
+                a {
+                    img {
+                        max-width: 23vw;
+                        border-radius: 1rem;
+                    }
+                }
+
+                &.active {
+                    height: 16.5vw;
+                }
+            }
+        }
+    }
+
+    footer {
+        background-color: $purple;
+        border-radius: .75rem;
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            padding: 2rem 2rem;
+
+            li {
+                a {
+                    font-weight: 300;
+
+                    color: $white;
+                    text-transform: uppercase;
+
+                    position: relative;
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        
+                        bottom: -5%;
+                        left: 0;
+                        
+                        width: 100%;
+                        height: 1px;
+                        background-color: #fff;
+
+                        transform: scaleX(0);
+
+                        transform-origin: center;
+
+                        transition: .3s ease;
+                    }
+
+                    &:is(:hover, :focus) {
+                        &::after {
+                            transform: scaleX(1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

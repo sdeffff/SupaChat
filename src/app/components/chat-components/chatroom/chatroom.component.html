@@ -117,7 +117,22 @@
         </ul>
 
         <div class="input-wrapper">
-            <div>
+            <div class="input-container">
+                <div class="emoji-icon" (click)="showEmojis()">
+                    <img src="../../../../assets/imgs/chat-icons/emoji-icon.svg" alt="">
+                </div>
+
+                <ul class="emojis" #emojisList [style]="emojisListStyles" (mouseleave)="emojisListStyles = 'transform: scale(0)'">
+                    <li>😀</li><li>😃</li><li>😄</li><li>😁</li>
+                    <li>😆</li><li>😅</li><li>😂</li><li>🤣</li>
+                    <li>🥲</li><li>🥹</li><li>😊</li><li>😇</li>
+                    <li>🙂</li><li>🙃</li><li>😉</li><li>😌</li>
+                    <li>😍</li><li>🥰</li><li>😘</li><li>😗</li>
+                    <li>😙</li><li>😚</li><li>😋</li><li>😛</li>
+                    <li>😝</li><li>😜</li><li>🤪</li><li>🤨</li>
+                    <li>🧐</li><li>🤓</li><li>😎</li><li>🥸</li>
+                </ul>
+
                 <input
                 name="inputMessage"
                 #msg="ngModel"

@@ -82,7 +82,6 @@ section {
 
                 h2 {
                     font-size: 1.75rem;
-                    font-weight: 400;
                 }
             }
         }
@@ -90,24 +89,67 @@ section {
         .input-wrapper {
             padding-inline: 2rem;
 
-            div {
+            .input-container {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+                gap: 1rem;
 
                 padding: .75rem 1.5rem;
 
                 border-radius: .75rem;
                 background-color: $purple;
 
+                position: relative;
+
+                .emoji-icon {
+                    padding: 0;
+                    cursor: pointer;
+                }
+                  
+                .emojis {
+                    position: absolute;
+                    top: -13rem;
+                    left: 0rem;
+                    
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+
+                    height: 11.5rem;
+                    overflow: hidden;
+                    overflow-y: scroll;
+
+                    &::-webkit-scrollbar {
+                        width: 0;
+                    }
+
+                    padding: 1rem;
+                    border-radius: .75rem;
+                    
+                    background-color: $purple;
+                    
+                    transform: scale(0);
+                    transition: .2s ease;
+                    
+                    li {
+                        font-size: 1.4rem;
+                        cursor: pointer;
+                    
+                        padding: .25rem;
+                    
+                        transition: .3s ease;
+                        border-radius: .25rem;
+                    
+                        &:is(:hover, :focus) {
+                            background-color: #1F1D2B;
+                        }
+                    }
+                }
+
                 input {
                     width: 100%;
                     padding-right: 1rem;
                     padding-block: 0.25rem;
-
-                    background: none;
-                    outline: none;
-                    border: none;
 
                     font-size: 1.1rem;
 
