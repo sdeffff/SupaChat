@@ -4,13 +4,18 @@ $white: #f5f5f5;
 $dark-purple: #1F1D2B; 
 
 body {
-    padding: 1.25rem;
     color: $white;
+}
+
+.container {
+    padding: 0.75rem;
 }
 
 .main-header {
     background-color: $purple;
-    border-radius: 1.25rem;
+    border-radius: 1rem;
+
+    height: 16vh;
 
     padding: 1.75rem;
 
@@ -18,9 +23,11 @@ body {
     align-items: center;
     justify-content: center;
 
-    h1 {
+    a {
+        color: $white;
         text-transform: uppercase;
         font-weight: 300;
+        font-size: 2rem;
 
         span {
             font-weight: 500;
@@ -31,76 +38,108 @@ body {
 section {
     display: flex;
     margin-top: 1.25rem;
+    gap: 1.25rem;
+    height: 77vh;
 
     main {
-
         ul {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            height: 100%;
+
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 1.25rem;
+
+            grid-template-areas: 
+            "slogan slogan slogan logo logo"
+            "slogan slogan slogan logo logo"
+            "slogan slogan slogan logo logo"
+            "details details contact contact contact"
+            "details details contact contact contact";
 
             li {
-                display: flex;
-                gap: 1.5rem;
+                color: $white;
+                padding: 1.5rem 1.25rem;
 
-                article {
+                border-radius: .75rem;
+
+                a {
+                    color: $white;
+                }
+
+                &:first-child {
+                    grid-area: slogan;
                     background-color: $purple;
 
-                    border-radius: 1.25rem;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    header {
+                        display: flex;
+                        justify-content: end;
+
+                        img {
+                            max-width: 4rem;
+                        }
+                    }
+
+                    p {
+                        font-size: 2.25rem;
+                        font-weight: 300;
+
+                        span {
+                            font-weight: 400;
+                        }
+                    }
                 }
 
-                div {
+                &:nth-child(2) {
+                    grid-area: logo;
                     background-color: $light-purple;
-
-                    border-radius: 1.25rem;
                 }
 
-                &.top-section {
-                    article {
-                        width: 42vw;
-                        height: 20rem;
-                    }
+                &:nth-child(3) {
+                    grid-area: details;
+                    background-color: $purple;
 
-                    div {
-                        width: 22vw;
-                        height: 20rem;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: start;
+
+                    p {
+                        font-size: 1.25rem;
+                        font-weight: 300;
                     }
                 }
 
-                &.bottom-section {
-                    article {
-                        width: 32vw;
-                        height: 14rem;
-                    }
+                &:last-child {
+                    grid-area: contact;
+                    background-color: $light-purple;
+                    padding: 0;
 
                     div {
-                        width: 32vw;
-                        height: 14rem;
+                        height: 100%;
 
                         a {
+                            padding: 1.5rem 1.25rem;
                             display: flex;
                             flex-direction: column;
                             justify-content: space-between;
-
-                            color: $white;
-
                             height: 100%;
-
-                            padding: 1.75rem 1.5rem;
 
                             header {
                                 display: flex;
-                                align-items: center;
                                 justify-content: space-between;
 
-                                img {
-                                    width: 1.25rem;
+                                p {
+                                    font-size: 1.1rem;
                                 }
                             }
 
                             h1 {
                                 font-size: 2rem;
-                                font-weight: 400;
                             }
                         }
                     }

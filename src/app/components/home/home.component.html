@@ -1,61 +1,115 @@
-<header class="main-header">
-    <h1>    
-        supa<span>chat</span>
-    </h1>
-</header>
+<div class="container">
+    <header class="main-header">
+        <a href="/">    
+            supa<span>chat</span>
+        </a>
+    </header>
 
-<section>
-    <main>
-        <ul>
-            <!-- <li class="top-section">
-                <article>
+    <section>
+        <main>
+            <ul>
+                <li>
+                    <header>
+                        <img src="../../../assets/imgs/home-page/icons/chat-icon.svg" alt="">
+                    </header>
 
-                </article>
+                    <p>SupaChat is built using <span>Angular</span> and <span>Firebase</span>, enjoy!</p>
+                </li>
+                <li></li>
+                <li>
+                    <img src="../../../assets/imgs/home-page/icons/repost.svg" alt="">
 
-                <div>
-
-                </div>
-            </li>
-            <li class="bottom-section">
-                <article>
-
-                </article>
-
-                <div>
-                    <a href="auth/register">
-                        <header>
-                            <p>via Google or GitHub</p> 
+                    <p>Use our innovative chat to talk to your friends</p>
+                </li>
+                <li>
+                    <div>
+                        <a href="auth/register">
+                            <header>
+                                <p>via Email</p> 
                                 
-                            <img src="../../../assets/imgs/home-page/arrow.svg" alt="">
-                        </header>
+                                <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
+                            </header>
 
-                        <h1>Sign Up</h1>
-                    </a>
-                </div>
-            </li> -->
+                            <h1>Sign Up</h1>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </main>
 
-            <li></li>
-            <li></li>
-            <li></li>
-            <li>
-                <article>
+        <aside>
+            <div>
+                <header>
+                    <h2>Music</h2>
+                </header>
 
-                </article>
+                <ul class="playlist">
+                    <li 
+                    [class.active]="activeIndex === 0"
+                    (click)="expand(0)">
+                            <header>
+                                <h2>Lofi</h2>
 
-                <div>
-                    <a href="auth/register">
+                                <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
+                            </header>
+                        <a href="https://www.youtube.com/live/jfKfPfyJRdk?si=zd39yDM5eVi9LRpN">
+                            <img src="../../../assets/imgs/home-page/imgs/lofi_playlist.jpg" alt="">
+                        </a>
+                    </li>
+                    <li
+                    [class.active]="activeIndex === 1"
+                    (click)="expand(1)">
                         <header>
-                            <p>via Google or GitHub</p> 
-                            
-                            <img src="../../../assets/imgs/home-page/arrow.svg" alt="">
+                            <h2>Jazz Music</h2>
+
+                            <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
                         </header>
+                        
+                        <a href="https://youtu.be/kc3ZLgN6uVQ?si=zw9mWU9Kmzg7qFAG">
+                            <img src="../../../assets/imgs/home-page/imgs/jazz_playlist.jpg" alt="">
+                        </a>
+                    </li>
+                    <li
+                    [class.active]="activeIndex === 2"
+                    (click)="expand(2)">
+                        <header>
+                            <h2>Ambient</h2>
 
-                        <h1>Sign Up</h1>
-                    </a>
-                </div>
-            </li>
-        </ul>
-    </main>
+                            <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
+                        </header>
+                        
+                        <a href="https://youtu.be/IXsWr2CK4SI?si=j89ztxW8cEc6Vk6_">
+                            <img src="../../../assets/imgs/home-page/imgs/ambient_playlist.jpg" alt="">
+                        </a>
+                    </li>
+                    <li
+                    [class.active]="activeIndex === 3"
+                    (click)="expand(3)">          
+                        <header>
+                            <h2>Music</h2>
 
-    <aside></aside>
-</section>
+                            <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
+                        </header>
+                        <a href="">
+                            <img src="../../../assets/imgs/home-page/imgs/music.png" alt="">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <footer>
+                <ul class="links">
+                    <li>
+                        <a href="">portfolio</a>
+                    </li>
+                    <li>
+                        <a href="">github</a>
+                    </li>
+                    <li>
+                        <a href="">linkedin</a>
+                    </li>
+                </ul>
+            </footer>
+        </aside>
+    </section>
+</div>
