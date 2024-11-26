@@ -17,7 +17,7 @@
             <div class="modal-btns">
                 <button (click)="logOut()">Log Out</button>
 
-                <button>Change Name</button>
+                <button (click)="showModal('name')">Change Name</button>
             </div>
         </div>
     </div>
@@ -47,6 +47,30 @@
                         </div>
                         <button (click)="sendRequest(friend)">Add Friend</button></li>
                 </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal change-name-modal" [style]="changeNameOpacity">
+        <div class="modal-inner">
+            <header>
+                <div class="close" (click)="closeModal('name')">
+
+                </div>
+            </header>
+
+            <div class="change-name-val">
+                <input 
+                name="newName"
+                #nn="ngModel"
+                [(ngModel)]="newName"
+                type="text" 
+                (keyup.enter)="changeName(newName)"
+                placeholder="Write your new name..."
+                autocomplete="off">
+                <button 
+                [disabled]="newName.length <= 3 || newName == ''"
+                (click)="changeName(newName)">Change</button>
             </div>
         </div>
     </div>

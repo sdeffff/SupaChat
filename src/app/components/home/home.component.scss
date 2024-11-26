@@ -1,7 +1,7 @@
-$purple: #272438;
-$light-purple: #8270E2;
+$blue: #3C84A0;
+$light-blue: #8AB8C9;
 $white: #f5f5f5;
-$dark-purple: #1F1D2B; 
+$dark-blue: #237B9D; 
 
 body {
     color: $white;
@@ -12,7 +12,7 @@ body {
 }
 
 .main-header {
-    background-color: $purple;
+    background-color: $blue;
     border-radius: 1rem;
 
     height: 16vh;
@@ -57,6 +57,15 @@ section {
             "details details contact contact contact"
             "details details contact contact contact";
 
+            @media (max-width: 1280px) {
+                grid-template-areas: 
+                "slogan slogan slogan logo logo"
+                "slogan slogan slogan logo logo"
+                "slogan slogan slogan logo logo"
+                "details details details contact contact"
+                "details details details contact contact";
+            }
+
             li {
                 color: $white;
                 padding: 1.5rem 1.25rem;
@@ -69,7 +78,7 @@ section {
 
                 &:first-child {
                     grid-area: slogan;
-                    background-color: $purple;
+                    background-color: $blue;
 
                     display: flex;
                     flex-direction: column;
@@ -96,12 +105,12 @@ section {
 
                 &:nth-child(2) {
                     grid-area: logo;
-                    background-color: $light-purple;
+                    background-color: $light-blue;
                 }
 
                 &:nth-child(3) {
                     grid-area: details;
-                    background-color: $purple;
+                    background-color: $blue;
 
                     display: flex;
                     flex-direction: column;
@@ -116,7 +125,7 @@ section {
 
                 &:last-child {
                     grid-area: contact;
-                    background-color: $light-purple;
+                    background-color: $light-blue;
                     padding: 0;
 
                     div {

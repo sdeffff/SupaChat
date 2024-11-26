@@ -55,29 +55,18 @@ export class ChatroomComponent {
   }
 
   ngAfterViewInit() {
-    //Handle emojis:
-    for(let child of this.emjs.nativeElement.children) {
-      child.addEventListener('click', () => {
-        this.inputMessage += child.innerHTML;
-      });
-    }
+    this.scrollToBottom();
+  }
 
-
-
+  private scrollToBottom() {
     try {
       this.chat.nativeElement.scrollTo({
         top: this.chat.nativeElement.scrollHeight,
         behavior: 'smooth'
-      });
+      })
     } catch (err) {
-      console.error('Scrolling failed:', err);
+
     }
-  }
-
-  public emojisListStyles: string = "transform: scale(0)";
-
-  showEmojis() {
-    this.emojisListStyles = "transform: scale(1)";
   }
 
   //----
@@ -87,6 +76,17 @@ export class ChatroomComponent {
         this.router.navigate(["/"]);
       }
     });
+  }
+
+  public newName: string = "";
+
+  //Changing name:
+  changeName(name: string) {
+    this.chatService.changeName(name).subscribe(() => setTimeout(() => {
+      location.reload();
+    }, 10));
+    // this.logOut();
+    // alert("You have to log in to see changes!")
   }
 
   //Add friend functionality:
@@ -142,6 +142,7 @@ export class ChatroomComponent {
   changeChat(uid: string) {
     this.chatService.changeChat(uid).subscribe((messages) => {
       this.messages = messages;
+      setTimeout(() => this.scrollToBottom(), 0);
     });
   }
 
@@ -155,17 +156,17 @@ export class ChatroomComponent {
       next: (messages) => {
         this.inputMessage = "";
         this.messages = messages;
+        setTimeout(() => this.scrollToBottom(), 0);
       }
-    });
-
-    this.chat.nativeElement.scrollTo({
-      top: this.chat.nativeElement.scrollHeight,
-      behavior: 'smooth'
     });
   }
 
   //handle emojis:
+  public emojisListStyles: string = "transform: scale(0)";
 
+  showEmojis() {
+    this.emojisListStyles = "transform: scale(1)";
+  }
 
   getPfp(uid: string) {
     if(uid === JSON.parse(localStorage.getItem('currentUser')!).uid) return this.profileSrc;
@@ -178,20 +179,29 @@ export class ChatroomComponent {
   } 
 
   //handle modals:
-  public modalOpacity: string = "opacity: 0; visibility: hidden; pointer-events: none;";
-  public addFriendModalOpacity: string = "opacity: 0; visibility: hidden; pointer-events: none;";
+  private show: string = "opacity: 1 ; visibility: visible; pointer-events: all;";
+  private hide: string = "opacity: 0; visibility: hidden; pointer-events: none;";
+
+  public modalOpacity: string = this.hide;
+  public addFriendModalOpacity: string = this.hide;
+  public changeNameOpacity: string = this.hide;
 
   showModal(modal: string) {
     if (modal === "friends") {
-      this.addFriendModalOpacity = "opacity: 1 ; visibility: visible; pointer-events: all;";
+      this.addFriendModalOpacity = this.show;
+    } else if(modal === "profile"){
+      this.modalOpacity = this.show;
     } else {
-      this.modalOpacity = "opacity: 1 ; visibility: visible; pointer-events: all;";
+      this.changeNameOpacity = this.show
     }
   }
 
-  closeModal() {
-    this.modalOpacity = "opacity: 0 ; visibility: hidden; pointer-events: none;";
-    this.addFriendModalOpacity = "opacity: 0 ; visibility: hidden; pointer-events: none;";
+  closeModal(modalName?:string) {
+    if(modalName === "name") this.changeNameOpacity = this.hide;
+    else {
+      this.modalOpacity = this.hide;
+      this.addFriendModalOpacity = this.hide;
+    }
   }
 
   //set styles for the messages:
