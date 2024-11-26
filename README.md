@@ -27,7 +27,7 @@
 <h3>I also used such features like: ngFor, ngModel, property bindings, in short, I tried not to use everything I get used to</h3>
 
 
-<h2>Direct Link: </h2> 
+Direct Link: 
 ``` 
-https://sdeffff.github.io/portfolio/ 
+https://supa-chat-ebon.vercel.app/
 ```
