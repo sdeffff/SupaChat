@@ -28,6 +28,6 @@
 
 
 <h2>Direct Link: </h2> 
-```
-https://supa-chat-git-main-sdeffffs-projects.vercel.app/
+``` 
+https://sdeffff.github.io/portfolio/ 
 ```
