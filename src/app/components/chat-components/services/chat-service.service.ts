@@ -2,16 +2,31 @@ import { Injectable } from '@angular/core';
 
 //Database:
 import { ref, get, set, update, remove, serverTimestamp, push, onValue } from 'firebase/database';
-import { db } from '../../../../environments/environment.dev';
+import { db, auth } from '../../../../environments/environment.dev';
 
 import { from, Observable, of, switchMap, tap } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
+import { updateProfile } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   constructor() { }
+
+  //Changing users name:
+  changeName(newName: string):Observable<any> {
+    const user = JSON.parse(localStorage.getItem("currentUser")!);
+
+    const userRef = ref(db, "users/" + user.uid);
+
+    return from(updateProfile(auth.currentUser!, {displayName: newName})
+                .then(() => {
+                  update(userRef, {
+                    name: newName
+                  })
+                }))
+  }
 
   //Friends functionality:
 
@@ -254,9 +269,9 @@ export class ChatService {
           senderId: msg.senderId,
           timestamp: msg.timestamp,
         }));
-        this.messagesSubject.next(messagesArray); // Emit updated messages
+        this.messagesSubject.next(messagesArray);
       } else {
-        this.messagesSubject.next([]); // Emit empty array if no messages exist
+        this.messagesSubject.next([]);
       }
     });
 

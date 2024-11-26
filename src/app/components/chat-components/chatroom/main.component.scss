@@ -1,7 +1,7 @@
-$purple: #272438;
-$light-purple: #8270E2;
+$blue: #3C84A0;
+$light-blue: #8AB8C9;
 $white: #f5f5f5;
-$dark-purple: #1F1D2B; 
+$dark-blue: #237B9D; 
 
 section {
     main {
@@ -32,11 +32,15 @@ section {
             }
 
             &::-webkit-scrollbar-thumb {
-                background-color: $light-purple;
+                background-color: $light-blue;
                 border-radius: .25rem;
             }
 
             .message {
+                background-color: #237B9D;
+                padding: .5rem;
+                border-radius: .5rem;
+
                 div {
                     display: flex;
                     align-items: center;
@@ -75,7 +79,7 @@ section {
 
             padding: 1.25rem 2rem;
 
-            background-color: $purple;
+            background-color: $blue;
 
             a {
                 color: $white;
@@ -98,13 +102,24 @@ section {
                 padding: .75rem 1.5rem;
 
                 border-radius: .75rem;
-                background-color: $purple;
+                background-color: $blue;
 
                 position: relative;
 
                 .emoji-icon {
-                    padding: 0;
+                    display: flex;
+                    align-items: center;
+
+                    padding: .25rem;
+                    border-radius: .25rem;
+
+                    transition: .25s ease;
+
                     cursor: pointer;
+
+                    &:is(:hover, :focus) {
+                        background-color: #237a9d90;
+                    }
                 }
                   
                 .emojis {
@@ -126,7 +141,7 @@ section {
                     padding: 1rem;
                     border-radius: .75rem;
                     
-                    background-color: $purple;
+                    background-color: $blue;
                     
                     transform: scale(0);
                     transition: .2s ease;
@@ -141,7 +156,7 @@ section {
                         border-radius: .25rem;
                     
                         &:is(:hover, :focus) {
-                            background-color: #1F1D2B;
+                            background-color: #237a9d90;
                         }
                     }
                 }
@@ -154,6 +169,10 @@ section {
                     font-size: 1.1rem;
 
                     color: $white;
+
+                    &::placeholder {
+                        color: #C4D9E1;
+                    }
                 }
 
                 button {
@@ -162,14 +181,14 @@ section {
 
                     background: none;
 
+                    &:is(:hover, :focus) > img {
+                        transform: translateX(.25rem);
+                    }
+
                     img {
                         width: 1.5rem;
                 
                         transition: .25s ease;
-
-                        &:is(:hover, :focus) {
-                            transform: translateX(.25rem);
-                        }
                     }
                 }
             }

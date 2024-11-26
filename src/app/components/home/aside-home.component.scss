@@ -1,7 +1,7 @@
-$purple: #272438;
-$light-purple: #8270E2;
+$blue: #3C84A0;
+$light-blue: #8AB8C9;
 $white: #f5f5f5;
-$dark-purple: #1F1D2B; 
+$dark-blue: #237B9D; 
 
 aside {
     display: flex;
@@ -13,7 +13,7 @@ aside {
     max-width: 25vw;
 
     div {
-        background-color: $purple;
+        background-color: $blue;
 
         padding: 1.5rem .75rem;
         border-radius: .75rem;
@@ -35,7 +35,7 @@ aside {
                 gap: .65rem;
 
                 cursor: pointer;
-                height: 2.5vw;
+                height: 2.5rem;
                 overflow: hidden;
                 padding-block: .25rem;
 
@@ -66,13 +66,17 @@ aside {
     }
 
     footer {
-        background-color: $purple;
+        background-color: $blue;
         border-radius: .75rem;
 
         .links {
             display: flex;
             justify-content: space-between;
-            padding: 2rem 2rem;
+            padding: 2rem;
+
+            @media (max-width: 1280px) {
+                padding: 1.5rem 1rem
+            }
 
             li {
                 a {
@@ -82,6 +86,10 @@ aside {
                     text-transform: uppercase;
 
                     position: relative;
+
+                    @media (max-width: 1280px) {
+                        font-size: .75rem;
+                    }
 
                     &::after {
                         content: "";

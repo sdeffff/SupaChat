@@ -100,7 +100,6 @@ export class AuthenticationService {
                 //Update user's name
                 return updateProfile(user, { displayName: name })
                   .then(() => {
-                    this.currentUser.next(user);
                     localStorage.setItem('currentUser', JSON.stringify(user));
       
                     //Write user data to the database
