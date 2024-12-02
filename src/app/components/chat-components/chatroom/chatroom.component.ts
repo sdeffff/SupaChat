@@ -55,6 +55,14 @@ export class ChatroomComponent {
   }
 
   ngAfterViewInit() {
+    const emojis = this.emjs.nativeElement.getElementsByTagName("li");
+
+    for(let e of emojis) {
+      e.addEventListener("click", () => {
+        this.inputMessage += e.innerText;
+      })
+    }
+
     this.scrollToBottom();
   }
 
