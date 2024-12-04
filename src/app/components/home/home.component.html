@@ -7,21 +7,21 @@
 
     <section>
         <main>
-            <ul>
-                <li>
+            <ul class="home-info">
+                <li class="info">
                     <header>
                         <img src="../../../assets/imgs/home-page/icons/chat-icon.svg" alt="">
                     </header>
 
                     <p>SupaChat is built using <span>Angular</span> and <span>Firebase</span>, enjoy!</p>
                 </li>
-                <li></li>
-                <li>
+                <li class="default"></li>
+                <li class="ad">
                     <img src="../../../assets/imgs/home-page/icons/repost.svg" alt="">
 
                     <p>Use our innovative chat to talk to your friends</p>
                 </li>
-                <li>
+                <li class="signup">
                     <div>
                         <a href="auth/register">
                             <header>
@@ -34,82 +34,84 @@
                         </a>
                     </div>
                 </li>
+
+                <li class="aside-playlist">
+                    <aside>
+                        <div>
+                            <header>
+                                <h2>Music for your vibe</h2>
+                            </header>
+            
+                            <ul class="playlist">
+                                <li 
+                                [class.active]="activeIndex === 0"
+                                (click)="expand(0)">
+                                        <header>
+                                            <h2>Lofi</h2>
+            
+                                            <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
+                                        </header>
+                                    <a href="https://www.youtube.com/live/jfKfPfyJRdk?si=zd39yDM5eVi9LRpN">
+                                        <img src="../../../assets/imgs/home-page/imgs/lofi_playlist.jpg" alt="">
+                                    </a>
+                                </li>
+                                <li
+                                [class.active]="activeIndex === 1"
+                                (click)="expand(1)">
+                                    <header>
+                                        <h2>Jazz Music</h2>
+            
+                                        <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
+                                    </header>
+                                    
+                                    <a href="https://youtu.be/kc3ZLgN6uVQ?si=zw9mWU9Kmzg7qFAG">
+                                        <img src="../../../assets/imgs/home-page/imgs/jazz_playlist.jpg" alt="">
+                                    </a>
+                                </li>
+                                <li
+                                [class.active]="activeIndex === 2"
+                                (click)="expand(2)">
+                                    <header>
+                                        <h2>Ambient</h2>
+            
+                                        <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
+                                    </header>
+                                    
+                                    <a href="https://youtu.be/IXsWr2CK4SI?si=j89ztxW8cEc6Vk6_">
+                                        <img src="../../../assets/imgs/home-page/imgs/ambient_playlist.jpg" alt="">
+                                    </a>
+                                </li>
+                                <li
+                                [class.active]="activeIndex === 3"
+                                (click)="expand(3)">          
+                                    <header>
+                                        <h2>Music</h2>
+            
+                                        <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
+                                    </header>
+                                    <a href="">
+                                        <img src="../../../assets/imgs/home-page/imgs/music.png" alt="">
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+            
+                        <footer>
+                            <ul class="links">
+                                <li>
+                                    <a href="https://sdeffff.github.io/portfolio/">portfolio</a>
+                                </li>
+                                <li>
+                                    <a href="https://github.com/sdeffff">github</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.linkedin.com/in/maksym-pavlii-60767a265/">linkedin</a>
+                                </li>
+                            </ul>
+                        </footer>
+                    </aside>
+                </li>
             </ul>
         </main>
-
-        <aside>
-            <div>
-                <header>
-                    <h2>Music for your vibe</h2>
-                </header>
-
-                <ul class="playlist">
-                    <li 
-                    [class.active]="activeIndex === 0"
-                    (click)="expand(0)">
-                            <header>
-                                <h2>Lofi</h2>
-
-                                <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
-                            </header>
-                        <a href="https://www.youtube.com/live/jfKfPfyJRdk?si=zd39yDM5eVi9LRpN">
-                            <img src="../../../assets/imgs/home-page/imgs/lofi_playlist.jpg" alt="">
-                        </a>
-                    </li>
-                    <li
-                    [class.active]="activeIndex === 1"
-                    (click)="expand(1)">
-                        <header>
-                            <h2>Jazz Music</h2>
-
-                            <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
-                        </header>
-                        
-                        <a href="https://youtu.be/kc3ZLgN6uVQ?si=zw9mWU9Kmzg7qFAG">
-                            <img src="../../../assets/imgs/home-page/imgs/jazz_playlist.jpg" alt="">
-                        </a>
-                    </li>
-                    <li
-                    [class.active]="activeIndex === 2"
-                    (click)="expand(2)">
-                        <header>
-                            <h2>Ambient</h2>
-
-                            <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
-                        </header>
-                        
-                        <a href="https://youtu.be/IXsWr2CK4SI?si=j89ztxW8cEc6Vk6_">
-                            <img src="../../../assets/imgs/home-page/imgs/ambient_playlist.jpg" alt="">
-                        </a>
-                    </li>
-                    <li
-                    [class.active]="activeIndex === 3"
-                    (click)="expand(3)">          
-                        <header>
-                            <h2>Music</h2>
-
-                            <img src="../../../assets/imgs/home-page/icons/arrow.svg" alt="">
-                        </header>
-                        <a href="">
-                            <img src="../../../assets/imgs/home-page/imgs/music.png" alt="">
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <footer>
-                <ul class="links">
-                    <li>
-                        <a href="https://sdeffff.github.io/portfolio/">portfolio</a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/sdeffff">github</a>
-                    </li>
-                    <li>
-                        <a href="https://www.linkedin.com/in/maksym-pavlii-60767a265/">linkedin</a>
-                    </li>
-                </ul>
-            </footer>
-        </aside>
     </section>
 </div>

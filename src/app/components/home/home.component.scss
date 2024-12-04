@@ -42,118 +42,144 @@ section {
     height: 77vh;
 
     main {
-        ul {
-            height: 100%;
-
+        .home-info {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(7, 1fr);
             grid-template-rows: repeat(5, 1fr);
             gap: 1.25rem;
 
             grid-template-areas: 
-            "slogan slogan slogan logo logo"
-            "slogan slogan slogan logo logo"
-            "slogan slogan slogan logo logo"
-            "details details contact contact contact"
-            "details details contact contact contact";
-
-            @media (max-width: 1280px) {
-                grid-template-areas: 
-                "slogan slogan slogan logo logo"
-                "slogan slogan slogan logo logo"
-                "slogan slogan slogan logo logo"
-                "details details details contact contact"
-                "details details details contact contact";
-            }
+            "slogan slogan slogan logo logo aside aside"
+            "slogan slogan slogan logo logo aside aside"
+            "slogan slogan slogan logo logo aside aside"
+            "details details contact contact contact aside aside"
+            "details details contact contact contact aside aside";
 
             li {
                 color: $white;
-                padding: 1.5rem 1.25rem;
+                padding: 1rem 1.25rem;
 
                 border-radius: .75rem;
 
                 a {
                     color: $white;
                 }
+            }
 
-                &:first-child {
-                    grid-area: slogan;
-                    background-color: $blue;
+            .info {
+                grid-area: slogan;
+                background-color: $blue;
 
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                header {
                     display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
+                    justify-content: end;
 
-                    header {
+                    img {
+                        max-width: 4rem;
+                    }
+                }
+
+                p {
+                    font-size: 2.25rem;
+                    font-weight: 300;
+
+                    span {
+                        font-weight: 400;
+                    }
+                }
+            }
+
+            .default {
+                grid-area: logo;
+                background-color: $light-blue;
+            }
+
+            .ad {
+                grid-area: details;
+                background-color: $blue;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: start;
+
+                p {
+                    font-size: 1.25rem;
+                    font-weight: 300;
+                }
+            }
+
+            .signup {
+                grid-area: contact;
+                background-color: $light-blue;
+                padding: 0;
+
+                div {
+                    height: 100%;
+
+                    a {
+                        padding: 1.5rem 1.25rem;
                         display: flex;
-                        justify-content: end;
-
-                        img {
-                            max-width: 4rem;
-                        }
-                    }
-
-                    p {
-                        font-size: 2.25rem;
-                        font-weight: 300;
-
-                        span {
-                            font-weight: 400;
-                        }
-                    }
-                }
-
-                &:nth-child(2) {
-                    grid-area: logo;
-                    background-color: $light-blue;
-                }
-
-                &:nth-child(3) {
-                    grid-area: details;
-                    background-color: $blue;
-
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    align-items: start;
-
-                    p {
-                        font-size: 1.25rem;
-                        font-weight: 300;
-                    }
-                }
-
-                &:last-child {
-                    grid-area: contact;
-                    background-color: $light-blue;
-                    padding: 0;
-
-                    div {
+                        flex-direction: column;
+                        justify-content: space-between;
                         height: 100%;
 
-                        a {
-                            padding: 1.5rem 1.25rem;
+                        header {
                             display: flex;
-                            flex-direction: column;
                             justify-content: space-between;
-                            height: 100%;
 
-                            header {
-                                display: flex;
-                                justify-content: space-between;
-
-                                p {
-                                    font-size: 1.1rem;
-                                }
+                            p {
+                                font-size: 1.1rem;
                             }
+                        }
 
-                            h1 {
-                                font-size: 2rem;
-                            }
+                        h1 {
+                            font-size: 2rem;
                         }
                     }
                 }
             }
+
+            .aside-playlist {
+                grid-area: aside;
+                padding: 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .home-info {
+                grid-template-columns: repeat(5, 1fr);
+                grid-template-rows: repeat(10, 1fr);
+                gap: 1rem;
+    
+                grid-template-areas: 
+                "slogan slogan slogan logo logo"
+                "slogan slogan slogan logo logo"
+                "slogan slogan slogan logo logo"
+                "details details details details details"
+                "details details details details details"
+                "aside aside contact contact contact"
+                "aside aside contact contact contact"
+                "aside aside contact contact contact"
+                "aside aside contact contact contact"
+                "aside aside contact contact contact";
+            }
+
+            .ad {
+                img {
+                    width: 3rem;
+                }
+
+                p {
+                    font-size: 2rem;
+                }
+            }
+
+            
         }
     }
 }

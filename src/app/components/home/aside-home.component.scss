@@ -8,6 +8,8 @@ aside {
     flex-direction: column;
     justify-content: space-between;
 
+    gap: 1rem;
+
     color: $white;
 
     max-width: 25vw;
@@ -34,6 +36,8 @@ aside {
                 flex-direction: column;
                 gap: .65rem;
 
+                background: none;
+
                 cursor: pointer;
                 height: 2.5rem;
                 overflow: hidden;
@@ -53,13 +57,13 @@ aside {
 
                 a {
                     img {
-                        max-width: 23vw;
+                        width: -webkit-fill-available;
                         border-radius: 1rem;
                     }
                 }
 
                 &.active {
-                    height: 16.5vw;
+                    height: 15.5vw;
                 }
             }
         }
@@ -72,11 +76,8 @@ aside {
         .links {
             display: flex;
             justify-content: space-between;
-            padding: 2rem;
-
-            @media (max-width: 1280px) {
-                padding: 1.5rem 1rem
-            }
+            align-items: center;
+            padding: 1rem;
 
             li {
                 a {
@@ -88,7 +89,7 @@ aside {
                     position: relative;
 
                     @media (max-width: 1280px) {
-                        font-size: .75rem;
+                        font-size: .8rem;
                     }
 
                     &::after {
@@ -117,5 +118,23 @@ aside {
                 }
             }
         }
+    }
+}
+
+@media (max-width: 1024px) {
+    aside {
+        width: 100%;
+        max-width: fit-content;
+    
+        
+        div {
+            .playlist {
+                li {
+                    &.active {
+                        height: 23vw;
+                    }
+                }
+            }
+       } 
     }
 }
