@@ -33,6 +33,8 @@ export class ChatroomComponent {
     private router: Router,
     private chatService: ChatService) {};
 
+    public preloaderStyles = "opacity: 100; visibility: visible;"
+
   ngOnInit() {
     this.getRequests();
     this.getFriends();
@@ -52,6 +54,13 @@ export class ChatroomComponent {
       } else {
         this.router.navigate(["/"]);
       }
+
+      const loaderInterval = setInterval(() => {
+        if(document.readyState === "complete") {
+          this.preloaderStyles = "opacity: 0; visibility: hidden;";
+          clearInterval(loaderInterval);
+        }
+      }, 10);
   }
 
   ngAfterViewInit() {
@@ -133,8 +142,9 @@ export class ChatroomComponent {
 
   //Accepting the request from another user:
   async acceptRequest(request: {name: string, uid: string, pfp: string}) {
-    await this.chatService.acceptRequest(request);
-    window.location.reload();
+    await this.chatService.acceptRequest(request).then(() => {
+      setTimeout(() => location.reload(), 1);
+    });
   }
 
   getFriends() {
@@ -147,9 +157,14 @@ export class ChatroomComponent {
   public messages: Array<{content: string, senderId: string, timestamp: number}> = [];
 
   //Creating chat:
-  changeChat(uid: string) {
+  public currentComradePfp: string = "";
+  public currentComradeName: string = "";
+
+  changeChat(uid: string, name: string, pfp: string) {
     this.chatService.changeChat(uid).subscribe((messages) => {
       this.messages = messages;
+      this.currentComradeName = name;
+      this.currentComradePfp = pfp;
       setTimeout(() => this.scrollToBottom(), 0);
     });
   }

@@ -138,3 +138,42 @@ aside {
        } 
     }
 }
+
+@media (max-width: 800px) {
+    aside {
+        footer {
+            .links {
+                flex-direction: column;
+                padding: .5rem;
+
+                li {
+                    a {
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
+
+        div {
+            padding: 1rem .5rem;
+        }
+    }
+}
+
+@media (max-width: 620px) {
+    aside {
+        div {
+            padding: .5rem .25rem;
+
+            .playlist {
+                li {
+                    header {
+                        h2 {
+                            font-size: 1.4rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

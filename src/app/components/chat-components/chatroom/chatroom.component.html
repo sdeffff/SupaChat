@@ -1,4 +1,8 @@
 <section>
+    <div class="preloader" [style]="preloaderStyles">
+        <img src="../../../../assets/preloader/load.svg" alt="">
+    </div>
+
     <div class="modal profile" [style]="modalOpacity">
         <div class="modal-inner">
             <header>
@@ -94,7 +98,7 @@
             <h2>Your friends</h2>
 
             <ul class="friends">
-                <li *ngFor="let friend of friends" class="friend" (click)="changeChat(friend.uid)">
+                <li *ngFor="let friend of friends" class="friend" (click)="changeChat(friend.uid, friend.name, friend.pfp)">
                     <div>
                         <article>
                             <header>
@@ -128,6 +132,11 @@
 
     <main>
         <header>
+            <div>
+                <img [src]="currentComradePfp" alt="">
+                <h2 [innerText]="currentComradeName"></h2>
+            </div>
+
             <a href=""><h2>SupaChat</h2></a>
         </header>
 
